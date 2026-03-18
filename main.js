@@ -73,6 +73,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function initAnalytics() {
   const widget = document.getElementById('analyticsWidget');
+  if (!widget) return;
+
+  // Check if user is Admin via URL parameter or saved localStorage flag
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('admin') === 'true') {
+    localStorage.setItem('admin_access', 'true');
+    // Clean up URL instantly so it still looks professional
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+
+  // If NOT admin, completely remove the widget from the DOM and exit securely
+  if (localStorage.getItem('admin_access') !== 'true') {
+    widget.remove();
+    return;
+  }
+
+  // --------- Admin Only Logic Below ---------
   const viewCountEl = document.getElementById('viewCount');
   const sessionDataEl = document.getElementById('sessionData');
 
@@ -105,7 +122,7 @@ function initAnalytics() {
       }, 1000);
     })
     .catch(err => {
-      console.warn('Analytics blocker detected or API down.', err);
+      console.warn('Analytics API down.', err);
       viewCountEl.textContent = '1,024+';
       setTimeout(() => { widget.classList.add('visible'); }, 500);
     });
