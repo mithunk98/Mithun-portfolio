@@ -69,6 +69,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- 3. Dynamic Page View & Session Tracking ---
   initAnalytics();
+
+  // --- 4. Back to Top Logic ---
+  const backToTopBtn = document.getElementById('backToTop');
+  if (backToTopBtn) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 500) {
+        backToTopBtn.classList.add('visible');
+      } else {
+        backToTopBtn.classList.remove('visible');
+      }
+    });
+
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
 });
 
 function initAnalytics() {
