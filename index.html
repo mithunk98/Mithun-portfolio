@@ -31,13 +31,13 @@
     <header class="navbar">
       <div class="container nav-container">
         <a href="#" class="nav-brand">Mithun<span>.</span></a>
-        <nav class="nav-links">
-          <a href="#about">About</a>
-          <a href="#expertise">Expertise</a>
-          <a href="#projects">Work</a>
-          <a href="#experience">Experience</a>
-          <a href="mailto:mithunk.98.0229@gmail.com" class="nav-cta">Get in Touch</a>
-        </nav>
+          <div class="nav-links" id="navLinks">
+            <a href="#about">About</a>
+            <a href="#expertise">Expertise</a>
+            <a href="#projects">Work</a>
+            <a href="#experience">Experience</a>
+            <a href="/Resume_Mithun_Kumar.pdf" download class="btn btn-secondary nav-cta" style="padding: 0.5rem 1rem; border: 1px solid var(--border-subtle);">Resume PDF Download</a>
+          </div>
         <div class="mobile-menu-btn">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         </div>
@@ -57,14 +57,11 @@
           <p class="hero-subtitle">
             I'm Mithun Kumar, a highly-analytical Business Analyst bridging the gap between rigorous data engineering and executive decision-making. I translate complex datasets into scalable, automated solutions.
           </p>
-          <div class="hero-actions">
-            <a href="#projects" class="btn btn-primary">
-              Explore Portfolio
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
-            </a>
-            <a href="https://linkedin.com/in/mithunk98" target="_blank" class="btn btn-secondary">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-              LinkedIn Profile
+          <div class="hero-actions reveal" style="transition-delay: 0.4s">
+            <a href="#projects" class="btn btn-primary btn-lg">View Enterprise Projects</a>
+            <a href="/Resume_Mithun_Kumar.pdf" download class="btn btn-secondary btn-lg">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              Download Resume
             </a>
           </div>
         </div>
@@ -91,6 +88,45 @@
           <div class="metric-item">
             <h2 class="metric-val">23+</h2>
             <p class="metric-desc">Automated ETL pipelines built</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Data Philosophy Section (New) -->
+      <section class="expertise-section" style="padding-bottom: 4rem;">
+        <div class="container">
+          <div class="reveal">
+            <span class="section-badge">Core Approach</span>
+            <h2 class="section-title">My Data Philosophy</h2>
+          </div>
+          
+          <div class="expertise-grid">
+            <!-- Principle 1 -->
+            <div class="expertise-card reveal">
+              <div class="expertise-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+              </div>
+              <h3 class="expertise-title">Data Quality Over Quantity</h3>
+              <p class="expertise-text">A terabyte of garbage data yields garbage insights. I prioritize rigorous ETL validation, absolute data integrity, and strict governance to ensure executives are making multi-million dollar decisions based on irrefutable facts.</p>
+            </div>
+            
+            <!-- Principle 2 -->
+            <div class="expertise-card reveal" style="transition-delay: 0.1s">
+              <div class="expertise-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+              </div>
+              <h3 class="expertise-title">Stakeholder-First Engineering</h3>
+              <p class="expertise-text">Dashboards are useless if end-users can't understand them. I bridge the gap between heavy technical engineering and business operations, translating complex database schemas into actionable intelligence tailored for non-technical stakeholders.</p>
+            </div>
+            
+            <!-- Principle 3 -->
+            <div class="expertise-card reveal" style="transition-delay: 0.2s">
+              <div class="expertise-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+              </div>
+              <h3 class="expertise-title">Automate the Mundane</h3>
+              <p class="expertise-text">If a reporting task takes 10 hours a week, I will write a Python or SQL script that does it in 10 seconds. My goal is to completely automate operational reporting so teams can spend their time actually analyzing trends instead of just building spreadsheets.</p>
+            </div>
           </div>
         </div>
       </section>
