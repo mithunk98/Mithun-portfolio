@@ -85,6 +85,24 @@ document.addEventListener("DOMContentLoaded", () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
+
+  // --- 5. Custom Event Tracking (Resume & Projects) ---
+  const trackEvent = (eventName) => {
+    fetch(`https://api.counterapi.dev/v1/mithun-portfolio-ba/${eventName}/up`)
+      .catch(err => console.warn('Analytics API down.', err));
+  };
+
+  // Track Resume Downloads
+  document.querySelectorAll('a[download]').forEach(btn => {
+    btn.addEventListener('click', () => trackEvent('resume_downloads'));
+  });
+
+  // Track Project Clicks
+  document.querySelectorAll('.project-card').forEach((card, index) => {
+    card.addEventListener('click', () => {
+      trackEvent(`project_${index + 1}_clicks`);
+    });
+  });
 });
 
 function initAnalytics() {

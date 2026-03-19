@@ -24,26 +24,33 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); }
     body { background-color: var(--bg-primary); color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; padding: 1rem; }
     
-    .card { background: var(--bg-secondary); padding: 3rem; border-radius: 16px; border: 1px solid var(--border-subtle); width: 100%; max-width: 450px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); text-align: center; position: relative; overflow: hidden; }
+    .card { background: var(--bg-secondary); padding: 3rem; border-radius: 16px; border: 1px solid var(--border-subtle); width: 100%; max-width: 800px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); position: relative; overflow: hidden; }
     .glow { position: absolute; width: 150px; height: 150px; background: rgba(56, 189, 248, 0.2); filter: blur(50px); top: -50px; right: -50px; z-index: 0; }
     .card-content { position: relative; z-index: 1; }
 
     h1 { font-size: 1.5rem; margin-bottom: 0.5rem; font-weight: 600; }
     p { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 2rem; }
     
-    input { width: 100%; padding: 1rem; background: var(--bg-tertiary); border: 1px solid var(--border-subtle); border-radius: 8px; color: var(--text-primary); margin-bottom: 1rem; font-size: 1rem; transition: 0.3s; }
+    input { width: 100%; max-width: 400px; padding: 1rem; background: var(--bg-tertiary); border: 1px solid var(--border-subtle); border-radius: 8px; color: var(--text-primary); margin-bottom: 1rem; font-size: 1rem; transition: 0.3s; }
     input:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2); }
     
-    button { width: 100%; padding: 1rem; background: #fff; color: #020617; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.9375rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    button { width: 100%; max-width: 400px; padding: 1rem; background: #fff; color: #020617; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.9375rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
     button:hover { background: #f1f5f9; transform: translateY(-2px); }
     
-    #dashboardView { display: none; }
+    #dashboardView { display: none; width: 100%; }
     
-    .metric-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
-    .metric-card { background: var(--bg-tertiary); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-subtle); display: flex; flex-direction: column; align-items: center; }
+    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .metric-card { background: var(--bg-tertiary); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-subtle); display: flex; flex-direction: column; align-items: center; text-align: center; }
     .metric-val { font-size: 2.5rem; font-weight: 700; color: var(--accent-color); margin-bottom: 0.25rem; font-variant-numeric: tabular-nums; }
     .metric-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); font-weight: 600; }
-    .error { color: #f87171; font-size: 0.85rem; margin-bottom: 1rem; display: none; background: rgba(248, 113, 113, 0.1); padding: 0.5rem; border-radius: 8px; border: 1px solid rgba(248, 113, 113, 0.2); }
+    
+    .leaderboard { background: var(--bg-tertiary); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-subtle); margin-bottom: 2rem; }
+    .leaderboard h3 { font-size: 1.1rem; margin-bottom: 1rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
+    .leaderboard-item { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--border-subtle); font-size: 0.9rem; }
+    .leaderboard-item:last-child { border-bottom: none; }
+    .leaderboard-count { color: var(--accent-color); font-weight: 700; }
+
+    .error { color: #f87171; font-size: 0.85rem; margin-bottom: 1rem; display: none; background: rgba(248, 113, 113, 0.1); padding: 0.5rem; border-radius: 8px; border: 1px solid rgba(248, 113, 113, 0.2); max-width: 400px; }
     
     @keyframes pulse {
       0% { opacity: 0.6; transform: scale(0.95); }
@@ -55,13 +62,13 @@
 <body>
 
   <!-- Login View -->
-  <div class="card" id="loginView">
+  <div class="card" id="loginView" style="max-width: 450px;">
     <div class="glow"></div>
-    <div class="card-content">
+    <div class="card-content" style="display: flex; flex-direction: column; align-items: center;">
       <div style="margin-bottom: 1.5rem; color: var(--accent-color);">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
       </div>
-      <h1>Admin Access Area</h1>
+      <h1>Admin BI Dashboard</h1>
       <p>Enter your master passcode to view live portfolio telemetry.</p>
       
       <div id="errorMsg" class="error">Incorrect Passcode. Try again.</div>
@@ -80,28 +87,44 @@
 
   <!-- Dashboard View -->
   <div class="card" id="dashboardView">
-    <div class="glow" style="background: rgba(16, 185, 129, 0.2);"></div>
+    <div class="glow" style="background: rgba(16, 185, 129, 0.2); width: 300px; height: 300px;"></div>
     <div class="card-content">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-        <h1 style="margin: 0;">Live Telemetry</h1>
+        <h1 style="margin: 0;">Live Intelligence Telemetry</h1>
         <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: #10B981; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
           <div style="width: 8px; height: 8px; border-radius: 50%; background: #10B981; box-shadow: 0 0 10px #10B981; animation: pulse 2s infinite;"></div>
-          Live
+          Live Sync
         </div>
       </div>
       
+      <!-- Core Metrics -->
       <div class="metric-grid">
         <div class="metric-card">
           <div class="metric-val" id="totalCount">...</div>
-          <div class="metric-label">Global Page Visits</div>
+          <div class="metric-label">Total Portfolio Visits</div>
         </div>
         <div class="metric-card">
-          <div class="metric-val" id="sessId" style="font-size: 1.5rem; color: var(--text-primary);">...</div>
-          <div class="metric-label">Current Active Session</div>
+          <div class="metric-val" id="resumeCount" style="color: #10B981;">...</div>
+          <div class="metric-label">Resume Downloads</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" id="convRate" style="color: #F59E0B;">...</div>
+          <div class="metric-label">Conversion Rate</div>
+        </div>
+      </div>
+
+      <!-- Project Heatmap -->
+      <div class="leaderboard">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          Project Click Heatmap (Leaderboard)
+        </h3>
+        <div id="projectList" style="min-height: 150px; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--text-secondary); font-size: 0.85rem;">
+          Loading global click data...
         </div>
       </div>
       
-      <button onclick="logout()" style="margin-top: 2rem; background: transparent; border: 1px solid var(--border-subtle); color: var(--text-secondary);">
+      <button onclick="logout()" style="max-width: 200px; margin-top: 2rem; background: transparent; border: 1px solid var(--border-subtle); color: var(--text-secondary);">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
         Secure Sign Out
       </button>
@@ -112,7 +135,6 @@
     // The Passcode to enter the admin page
     const PASS = "BA2026"; 
     
-    // Check if already authenticated via session
     if(sessionStorage.getItem('admin_auth') === 'true') {
       showDashboard();
     }
@@ -131,7 +153,7 @@
     function logout() {
       sessionStorage.removeItem('admin_auth');
       document.getElementById('dashboardView').style.display = 'none';
-      document.getElementById('loginView').style.display = 'block';
+      document.getElementById('loginView').style.display = 'flex';
       document.getElementById('passcode').value = '';
     }
     
@@ -139,32 +161,61 @@
       document.getElementById('loginView').style.display = 'none';
       document.getElementById('dashboardView').style.display = 'block';
       
-      // Grab session id
-      let sess = sessionStorage.getItem('usr_sess_id');
-      if(!sess) {
-         sess = Math.random().toString(16).substr(2, 6).toUpperCase();
-         sessionStorage.setItem('usr_sess_id', sess);
-      }
-      document.getElementById('sessId').textContent = '#' + sess;
+      // Fetch Core Metrics
+      const fetchVisits = fetch('https://api.counterapi.dev/v1/mithun-portfolio-ba/visits/').then(r=>r.json()).catch(()=>({count:0}));
+      const fetchResumes = fetch('https://api.counterapi.dev/v1/mithun-portfolio-ba/resume_downloads/').then(r=>r.json()).catch(()=>({count:0}));
+
+      Promise.all([fetchVisits, fetchResumes]).then(results => {
+         const visits = results[0]?.count || 0;
+         const resumes = results[1]?.count || 0;
+         
+         document.getElementById('totalCount').textContent = visits.toLocaleString();
+         document.getElementById('resumeCount').textContent = resumes.toLocaleString();
+         
+         const rate = visits > 0 ? ((resumes / visits) * 100).toFixed(1) : "0.0";
+         document.getElementById('convRate').textContent = rate + '%';
+      });
+
+      // Fetch Project Clicks
+      const projectNames = [
+        "End-to-End ETL Pipeline for Telecom Data",
+        "Predictive Sales Forecasting for Retail",
+        "Executive KPI Dashboard for Global Manufacturing",
+        "Exploratory Data Analysis: Urban Mobility",
+        "Supply Chain Optimization: Cocoa Production",
+        "NLP Sentiment Analysis on E-commerce Reviews"
+      ];
       
-      // Fetch strictly from the READ-ONLY endpoint (/visits/)
-      // This retrieves the count without adding +1 to it
-      fetch('https://api.counterapi.dev/v1/mithun-portfolio-ba/visits/')
-        .then(res => res.json())
-        .then(data => {
-          if(data && data.count !== undefined) {
-             document.getElementById('totalCount').textContent = data.count.toLocaleString();
-          } else {
-             document.getElementById('totalCount').textContent = '0';
-          }
-        })
-        .catch(err => {
-          document.getElementById('totalCount').textContent = 'Err';
-          console.error(err);
-        });
+      const projectFetches = projectNames.map((name, i) => 
+        fetch(`https://api.counterapi.dev/v1/mithun-portfolio-ba/project_${i+1}_clicks/`)
+          .then(r=>r.json())
+          .then(data => ({ name, count: data.count || 0 }))
+          .catch(() => ({ name, count: 0 }))
+      );
+
+      Promise.all(projectFetches).then(projects => {
+         // Sort descending by highest clicked (Heatmap array)
+         projects.sort((a,b) => b.count - a.count); 
+         
+         const listEl = document.getElementById('projectList');
+         listEl.innerHTML = '';
+         
+         if(projects.every(p => p.count === 0)) {
+           listEl.innerHTML = '<div style="padding: 2rem;">No click data recorded yet.</div>';
+           return;
+         }
+
+         projects.forEach((p, index) => {
+            listEl.innerHTML += `
+              <div class="leaderboard-item">
+                <span><span style="color:var(--text-secondary); margin-right:8px;">#${index+1}</span> ${p.name}</span> 
+                <span class="leaderboard-count">${p.count} clicks</span>
+              </div>
+            `;
+         });
+      });
     }
     
-    // Allow pressing Enter to submit password
     document.getElementById('passcode').addEventListener('keypress', function(e) {
       if (e.key === 'Enter') checkPass();
     });
