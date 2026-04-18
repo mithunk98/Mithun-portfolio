@@ -106,78 +106,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initAnalytics() {
-  const widget = document.getElementById('analyticsWidget');
-  if (!widget) return;
-
-  // Check if user is Admin via URL parameter or saved localStorage flag
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('admin') === 'true') {
-    localStorage.setItem('admin_access', 'true');
-    // Clean up URL instantly so it still looks professional
-    window.history.replaceState({}, document.title, window.location.pathname);
-  }
-
-  // If NOT admin, completely remove the widget from the DOM and exit securely
-  if (localStorage.getItem('admin_access') !== 'true') {
-    widget.remove();
-    return;
-  }
-
-  // --------- Admin Only Logic Below ---------
-  const viewCountEl = document.getElementById('viewCount');
-  const sessionDataEl = document.getElementById('sessionData');
-
-  // Handle precise session string
+  // Silent tracking of global page views completely hidden from UI
   let sessionId = sessionStorage.getItem('usr_sess_id');
   if(!sessionId) {
-    // Generate a pseudo-random hex session ID
     sessionId = Math.random().toString(16).substr(2, 6).toUpperCase();
     sessionStorage.setItem('usr_sess_id', sessionId);
   }
-  sessionDataEl.textContent = '#' + sessionId;
 
-  // Utilize a free, highly-available hit counter API countapi logic (mocked via a public namespace for Mithun)
-  // We use api.countapi.net or alternative. Since many free ones go down, we use hits.seeyoufarm or hitcount
-  // To keep it clean and robust via JSON:
-  fetch('https://api.counterapi.dev/v1/mithun-portfolio-ba/visits/up')
-    .then(response => response.json())
-    .then(data => {
-      // CounterAPI returns nested data object
-      if (data && data.count) {
-        // Animate counter
-        animateCounter(viewCountEl, 0, data.count, 2000);
-      } else {
-        viewCountEl.textContent = '1,024'; // fallback placeholder
-      }
-      
-      // Reveal widget smoothly after fetching
-      setTimeout(() => {
-        widget.classList.add('visible');
-      }, 1000);
-    })
-    .catch(err => {
-      console.warn('Analytics API down.', err);
-      viewCountEl.textContent = '1,024+';
-      setTimeout(() => { widget.classList.add('visible'); }, 500);
-    });
-}
-
-// Helper: Animate numbers counting up to simulate processing
-function animateCounter(element, start, end, duration) {
-  let startTimestamp = null;
-  const step = (timestamp) => {
-    if (!startTimestamp) startTimestamp = timestamp;
-    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-    // easing out quart
-    const easeProgress = 1 - Math.pow(1 - progress, 4); 
-    const current = Math.floor(easeProgress * (end - start) + start);
-    // Format with commas
-    element.textContent = current.toLocaleString();
-    if (progress < 1) {
-      window.requestAnimationFrame(step);
-    } else {
-      element.textContent = end.toLocaleString();
-    }
-  };
-  window.requestAnimationFrame(step);
+  // Fire and forget hit to the counter API so it logs accurately for the admin dashboard
+  fetch('https://api.counterapi.dev/v1/mithun-portfolio-ba/visits/up').catch(() => {});
 }
