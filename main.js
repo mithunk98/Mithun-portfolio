@@ -1,32 +1,48 @@
-// --- 1. Sticky Header & Mobile Menu ---
+// --- 1. Sticky Header, Theme Toggle & Mobile Menu ---
 document.addEventListener("DOMContentLoaded", () => {
   const navbar = document.querySelector('.navbar');
   const mobileBtn = document.querySelector('.mobile-menu-btn');
   const navLinks = document.querySelector('.nav-links');
 
-  // Sticky header visually updates on scroll
+  // Scroll progress bar + sticky header
+  const progressBar = document.getElementById('scrollProgress');
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-      navbar.style.background = 'rgba(2, 6, 23, 0.9)'; // Dark transparent
-      navbar.style.borderBottomColor = 'rgba(255, 255, 255, 0.15)';
-    } else {
-      navbar.style.background = 'rgba(2, 6, 23, 0.7)'; // Lighter dark transparent
-      navbar.style.borderBottomColor = 'rgba(255, 255, 255, 0.1)';
+    navbar.classList.toggle('scrolled', window.scrollY > 50);
+    if (progressBar) {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      progressBar.style.width = (docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0) + '%';
     }
   });
 
-  // Mobile menu toggle
+  // --- Theme Toggle ---
+  const themeToggle = document.getElementById('themeToggle');
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+
+  themeToggle.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  // Mobile menu toggle with animation
   mobileBtn.addEventListener('click', () => {
-    navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-    if(navLinks.style.display === 'flex') {
+    const isOpen = navLinks.style.display === 'flex';
+    navLinks.style.display = isOpen ? 'none' : 'flex';
+    mobileBtn.classList.toggle('active');
+    if (!isOpen) {
+      navLinks.classList.add('mobile-open');
       navLinks.style.flexDirection = 'column';
       navLinks.style.position = 'absolute';
       navLinks.style.top = '100%';
       navLinks.style.left = '0';
       navLinks.style.width = '100%';
-      navLinks.style.background = '#020617';
+      navLinks.style.background = 'var(--bg-primary)';
       navLinks.style.padding = '2rem 0';
-      navLinks.style.borderBottom = '1px solid rgba(255, 255, 255, 0.1)';
+      navLinks.style.borderBottom = '1px solid var(--border-subtle)';
+    } else {
+      navLinks.classList.remove('mobile-open');
     }
   });
 
@@ -50,7 +66,49 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // --- 2. Scroll Reveal Animations ---
+  // --- 2. Animated Counters ---
+  const metricVals = document.querySelectorAll('.metric-val');
+  let countersRun = false;
+  const runCounters = () => {
+    if (countersRun) return;
+    countersRun = true;
+    metricVals.forEach(el => {
+      const full = el.textContent.trim();
+      const num = parseInt(full);
+      const suffix = full.replace(/[0-9]/g, '');
+      const duration = 1600;
+      const start = performance.now();
+      const tick = (now) => {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(eased * num) + suffix;
+        if (progress < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+  };
+  const metricsEl = document.querySelector('.metrics-section');
+  if (metricsEl) {
+    new IntersectionObserver((entries, obs) => {
+      if (entries[0].isIntersecting) { runCounters(); obs.disconnect(); }
+    }, { threshold: 0.5 }).observe(metricsEl);
+  }
+
+  // --- 3. Active Nav Highlight ---
+  const sections = document.querySelectorAll('section[id]');
+  const navAnchors = document.querySelectorAll('.nav-links a[href^="#"]');
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navAnchors.forEach(a => a.classList.remove('nav-active'));
+        const match = document.querySelector(`.nav-links a[href="#${entry.target.id}"]`);
+        if (match) match.classList.add('nav-active');
+      }
+    });
+  }, { threshold: 0.35, rootMargin: '-80px 0px -40% 0px' });
+  sections.forEach(s => navObserver.observe(s));
+
+  // --- 4. Scroll Reveal Animations ---
   const revealElements = document.querySelectorAll('.reveal');
   const revealObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {

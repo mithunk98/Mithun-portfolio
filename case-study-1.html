@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Case Study: Operational Reporting Automation Engine | Mithun Kumar</title>
+    <meta name="description" content="How I eliminated 20+ hours of weekly manual work by engineering a Python/SQL ETL pipeline with 99% daily accuracy.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <style>
+      .cs-hero { padding-top: 140px; padding-bottom: 5rem; border-bottom: 1px solid var(--border-subtle); }
+      .cs-back { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 2.5rem; transition: var(--transition); }
+      .cs-back:hover { color: var(--accent-color); transform: translateX(-4px); }
+      .cs-meta { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
+      .cs-meta-tag { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 0.35rem 0.85rem; border-radius: 100px; background: var(--bg-tertiary); border: 1px solid var(--border-subtle); color: var(--accent-color); }
+      .cs-title { font-size: 3rem; font-weight: 700; line-height: 1.15; margin-bottom: 1.5rem; letter-spacing: -0.03em; }
+      .cs-subtitle { font-size: 1.2rem; color: var(--text-secondary); max-width: 640px; }
+      .cs-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 4rem 0; }
+      .cs-stat { padding: 2rem; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 16px; text-align: center; }
+      .cs-stat-val { font-size: 2.5rem; font-weight: 700; color: var(--accent-color); letter-spacing: -0.04em; margin-bottom: 0.5rem; }
+      .cs-stat-label { font-size: 0.875rem; color: var(--text-secondary); font-weight: 500; }
+      .cs-body { padding: 5rem 0; }
+      .cs-grid { display: grid; grid-template-columns: 1fr 320px; gap: 5rem; align-items: start; }
+      .cs-content h2 { font-size: 1.625rem; margin: 3rem 0 1.25rem; color: var(--text-primary); letter-spacing: -0.02em; }
+      .cs-content h2:first-child { margin-top: 0; }
+      .cs-content p { color: var(--text-secondary); font-size: 1.0625rem; line-height: 1.75; margin-bottom: 1.25rem; }
+      .cs-content ul { list-style: none; padding: 0; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
+      .cs-content ul li { color: var(--text-secondary); font-size: 1.0625rem; padding-left: 1.5rem; position: relative; line-height: 1.7; }
+      .cs-content ul li::before { content: ""; position: absolute; left: 0; top: 0.6em; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-color); }
+      .cs-sidebar { position: sticky; top: 100px; display: flex; flex-direction: column; gap: 1.5rem; }
+      .cs-sidebar-card { padding: 1.75rem; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 16px; }
+      .cs-sidebar-card h4 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-color); margin-bottom: 1.25rem; font-weight: 700; }
+      .cs-sidebar-card p { font-size: 0.9375rem; color: var(--text-secondary); margin-bottom: 0.5rem; line-height: 1.6; }
+      .cs-sidebar-card p strong { color: var(--text-primary); font-weight: 600; }
+      .cs-outcome-block { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-left: 3px solid var(--accent-color); border-radius: 0 12px 12px 0; padding: 1.5rem 2rem; margin: 2rem 0; }
+      .cs-outcome-block p { margin: 0; color: var(--text-primary); font-size: 1.0625rem; font-weight: 500; font-style: italic; }
+      .cs-pipeline { display: flex; flex-direction: column; gap: 0; margin: 2rem 0; }
+      .cs-pipeline-step { display: flex; gap: 1.5rem; align-items: flex-start; }
+      .cs-pipeline-step:not(:last-child) .step-line-wrap { display: flex; flex-direction: column; align-items: center; }
+      .step-dot { width: 36px; height: 36px; border-radius: 50%; background: var(--bg-tertiary); border: 2px solid var(--accent-color); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: var(--accent-color); flex-shrink: 0; }
+      .step-line { width: 2px; flex: 1; background: var(--border-subtle); margin: 4px 0; min-height: 24px; }
+      .step-content { padding-bottom: 2rem; }
+      .step-content h5 { font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.4rem; }
+      .step-content p { font-size: 0.9375rem; color: var(--text-secondary); margin: 0; line-height: 1.6; }
+      .cs-tags-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+      .cs-tags-row span { font-size: 0.8125rem; padding: 0.35rem 0.75rem; background: var(--bg-primary); color: var(--text-primary); border-radius: 6px; border: 1px solid var(--border-subtle); font-weight: 500; }
+      .cs-next { padding: 5rem 0; border-top: 1px solid var(--border-subtle); text-align: center; }
+      .cs-next p { color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.0625rem; }
+      @media (max-width: 900px) {
+        .cs-grid { grid-template-columns: 1fr; gap: 3rem; }
+        .cs-sidebar { position: static; }
+        .cs-stats { grid-template-columns: 1fr; }
+        .cs-title { font-size: 2.25rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <header class="navbar">
+      <div class="container nav-container">
+        <a href="./index.html" class="nav-brand">Mithun<span>.</span></a>
+        <div class="nav-links" id="navLinks">
+          <a href="./index.html#about">About</a>
+          <a href="./index.html#expertise">Expertise</a>
+          <a href="./index.html#projects">Work</a>
+          <a href="./index.html#experience">Experience</a>
+          <a href="/Mithun_Resume.pdf" download class="btn btn-secondary nav-cta" style="padding: 0.5rem 1rem; border: 1px solid var(--border-subtle); margin-left: 1rem;">Resume PDF Download</a>
+        </div>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        </button>
+        <div class="mobile-menu-btn" id="mobileBtn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Case Study Hero -->
+      <section class="cs-hero">
+        <div class="container">
+          <a href="./index.html#projects" class="cs-back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            Back to all projects
+          </a>
+          <div class="cs-meta">
+            <span class="cs-meta-tag">Automation</span>
+            <span class="cs-meta-tag">Python</span>
+            <span class="cs-meta-tag">PostgreSQL</span>
+            <span class="cs-meta-tag">ETL</span>
+          </div>
+          <h1 class="cs-title">Operational Reporting<br>Automation Engine</h1>
+          <p class="cs-subtitle">How I eliminated 20+ hours of weekly manual work by engineering a Python/SQL ETL pipeline with daily validation checks and 99% data accuracy.</p>
+
+          <div class="cs-stats">
+            <div class="cs-stat">
+              <div class="cs-stat-val">50%</div>
+              <div class="cs-stat-label">Reduction in reporting time</div>
+            </div>
+            <div class="cs-stat">
+              <div class="cs-stat-val">99%</div>
+              <div class="cs-stat-label">Daily data accuracy rate</div>
+            </div>
+            <div class="cs-stat">
+              <div class="cs-stat-val">20+</div>
+              <div class="cs-stat-label">Hours saved per week</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Case Study Body -->
+      <section class="cs-body">
+        <div class="container cs-grid">
+
+          <!-- Main content -->
+          <div class="cs-content">
+
+            <h2>The Problem</h2>
+            <p>The collections operations team at Vidyuttech was spending over 20 hours every week on a fully manual reporting workflow. Each Monday, analysts would pull raw data from 10+ PostgreSQL tables, paste it into Excel, reconcile column mismatches by hand, and format summary reports for leadership.</p>
+            <p>Beyond the time cost, the process was fragile. A single misaligned join or copy-paste error would go undetected until leadership spotted a discrepancy in a review meeting — often days later. There was no audit trail, no validation, and no way to trace a wrong number back to its source.</p>
+
+            <div class="cs-outcome-block">
+              <p>"We were spending more time assembling the data than actually reading it. Every week it felt like we were starting from scratch."</p>
+            </div>
+
+            <h2>Requirements Gathering</h2>
+            <p>Before writing a single line of code, I spent two sessions with the operations lead mapping every manual step in their existing process. Key questions I asked:</p>
+            <ul>
+              <li>Which tables are joined, and what are the common keys?</li>
+              <li>What transformation rules are applied (aggregations, filters, business logic)?</li>
+              <li>What does "correct" look like — are there known totals or benchmarks to validate against?</li>
+              <li>Who consumes the report and in what format?</li>
+              <li>What's the acceptable latency — do they need real-time or is daily sufficient?</li>
+            </ul>
+            <p>This scoping revealed that the core logic was stable — the same ~12 transformations ran every time — but nobody had ever written it down. Documenting the business logic before automating it was the most important step.</p>
+
+            <h2>Technical Approach</h2>
+            <p>I designed a three-stage Python ETL pipeline, scheduled via a daily cron job, that mirrored exactly what the analysts were doing manually — but with validation baked in at every stage.</p>
+
+            <div class="cs-pipeline">
+              <div class="cs-pipeline-step">
+                <div class="step-line-wrap">
+                  <div class="step-dot">1</div>
+                  <div class="step-line"></div>
+                </div>
+                <div class="step-content">
+                  <h5>Extract</h5>
+                  <p>Python + psycopg2 queries 10+ PostgreSQL tables with parameterised date windows, pulling only the delta since last run to keep query times low.</p>
+                </div>
+              </div>
+              <div class="cs-pipeline-step">
+                <div class="step-line-wrap">
+                  <div class="step-dot">2</div>
+                  <div class="step-line"></div>
+                </div>
+                <div class="step-content">
+                  <h5>Transform & Validate</h5>
+                  <p>Pandas applies the 12 documented business-logic transformations. A validation layer then checks row counts, null thresholds, and expected totals against historical baselines. Any anomaly triggers an email alert before the report is generated.</p>
+                </div>
+              </div>
+              <div class="cs-pipeline-step">
+                <div class="step-line-wrap">
+                  <div class="step-dot">3</div>
+                  <div class="step-line"></div>
+                </div>
+                <div class="step-content">
+                  <h5>Load & Deliver</h5>
+                  <p>Clean output is written back to a PostgreSQL summary table (powering Metabase dashboards) and simultaneously exported as a formatted Excel file, auto-emailed to stakeholders each morning at 7 AM.</p>
+                </div>
+              </div>
+            </div>
+
+            <h2>Key Challenges</h2>
+            <ul>
+              <li><strong style="color: var(--text-primary);">Undocumented edge cases</strong> — three business rules only surfaced after the first run exposed mismatch. I added them to the transform layer and documented them in a shared Notion page so future analysts could maintain the pipeline.</li>
+              <li><strong style="color: var(--text-primary);">Schema drift</strong> — one upstream table added a new column mid-project. I built a lightweight schema-diff check into the extract stage so the pipeline fails loudly rather than silently ingesting wrong data.</li>
+              <li><strong style="color: var(--text-primary);">Stakeholder trust</strong> — the team was sceptical of automation at first. I ran the pipeline in parallel with the manual process for two weeks, producing side-by-side comparisons, before switching over fully.</li>
+            </ul>
+
+            <h2>Results</h2>
+            <p>After a two-week parallel validation period, the manual workflow was retired entirely. The pipeline has run daily without a missed report since deployment.</p>
+            <ul>
+              <li>Reporting time cut from 20+ hours/week to under 2 hours (monitoring + exception handling)</li>
+              <li>99% daily accuracy — anomaly alerts catch data issues before they reach leadership</li>
+              <li>Zero missed Monday reports in the 6 months post-deployment</li>
+              <li>The Metabase dashboard downstream received 40% fewer ad-hoc data requests</li>
+            </ul>
+
+            <h2>What I'd Do Differently</h2>
+            <p>I'd push for a proper data contract with the upstream teams earlier. The schema drift incident could have been avoided with a shared agreement on column stability. I'd also add dbt-style lineage documentation from the start, rather than retroactively — it makes onboarding the next analyst significantly faster.</p>
+
+          </div>
+
+          <!-- Sidebar -->
+          <aside class="cs-sidebar">
+            <div class="cs-sidebar-card">
+              <h4>Project Details</h4>
+              <p><strong>Company</strong><br>Vidyuttech</p>
+              <p style="margin-top:1rem"><strong>Role</strong><br>Business Analyst</p>
+              <p style="margin-top:1rem"><strong>Timeline</strong><br>~6 weeks (2025)</p>
+              <p style="margin-top:1rem"><strong>Scope</strong><br>Solo end-to-end — requirements, pipeline, validation, delivery</p>
+            </div>
+            <div class="cs-sidebar-card">
+              <h4>Tech Stack</h4>
+              <div class="cs-tags-row">
+                <span>Python</span><span>psycopg2</span><span>Pandas</span><span>PostgreSQL</span><span>Metabase</span><span>Cron</span><span>Excel</span>
+              </div>
+            </div>
+            <div class="cs-sidebar-card">
+              <h4>Key Skills</h4>
+              <div class="cs-tags-row">
+                <span>ETL Design</span><span>Data Validation</span><span>Requirements Gathering</span><span>Stakeholder Management</span><span>Process Automation</span>
+              </div>
+            </div>
+          </aside>
+
+        </div>
+      </section>
+
+      <!-- Next CTA -->
+      <!-- Case Study Navigation -->
+      <section style="padding: 3rem 0; border-top: 1px solid var(--border-subtle);">
+        <div class="container">
+          <div class="cs-nav">
+            <a href="#" class="cs-nav-link disabled prev">
+              <svg class="cs-nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              <div class="cs-nav-text"><h4>Previous</h4><p>Back to portfolio</p></div>
+            </a>
+            <a href="./case-study-2.html" class="cs-nav-link next">
+              <div class="cs-nav-text"><h4>Next Case Study</h4><p>Enterprise BI Dashboard Suite</p></div>
+              <svg class="cs-nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="cs-next">
+        <div class="container">
+          <div class="section-badge" style="margin: 0 auto 1.5rem;">More Work</div>
+          <h2 class="section-title" style="margin-bottom: 1rem;">Explore other projects</h2>
+          <p>See how I've applied similar thinking across BI dashboards, big data processing, and predictive modelling.</p>
+          <a href="./index.html#projects" class="btn btn-primary btn-lg">View All Projects</a>
+        </div>
+      </section>
+    </main>
+
+    <button id="backToTop" class="back-to-top" aria-label="Back to Top">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+    </button>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const navbar = document.querySelector('.navbar');
+        const themeToggle = document.getElementById('themeToggle');
+        const backToTopBtn = document.getElementById('backToTop');
+        const mobileBtn = document.getElementById('mobileBtn');
+        const navLinks = document.getElementById('navLinks');
+
+        // Persist theme from main portfolio
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+          const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', next);
+          localStorage.setItem('theme', next);
+        });
+
+        window.addEventListener('scroll', () => {
+          navbar.classList.toggle('scrolled', window.scrollY > 50);
+          if (backToTopBtn) backToTopBtn.classList.toggle('visible', window.scrollY > 500);
+        });
+
+        backToTopBtn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        mobileBtn?.addEventListener('click', () => {
+          const isOpen = navLinks.style.display === 'flex';
+          navLinks.style.display = isOpen ? 'none' : 'flex';
+          if (!isOpen) {
+            navLinks.style.flexDirection = 'column';
+            navLinks.style.position = 'absolute';
+            navLinks.style.top = '100%';
+            navLinks.style.left = '0';
+            navLinks.style.width = '100%';
+            navLinks.style.background = 'var(--bg-primary)';
+            navLinks.style.padding = '2rem 0';
+            navLinks.style.borderBottom = '1px solid var(--border-subtle)';
+          }
+        });
+
+        // Scroll reveal
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) { entry.target.classList.add('active'); observer.unobserve(entry.target); }
+          });
+        }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+      });
+    </script>
+  </body>
+</html>

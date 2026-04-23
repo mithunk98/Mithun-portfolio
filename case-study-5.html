@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Case Study: Interactive E-commerce Funnel Analyzer | Mithun Kumar</title>
+    <meta name="description" content="How I used Power BI and DAX to visualise the full e-commerce conversion funnel and identify the exact pages where users were dropping off.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <style>
+      .cs-hero { padding-top: 140px; padding-bottom: 5rem; border-bottom: 1px solid var(--border-subtle); }
+      .cs-back { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 2.5rem; transition: var(--transition); }
+      .cs-back:hover { color: var(--accent-color); transform: translateX(-4px); }
+      .cs-meta { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
+      .cs-meta-tag { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 0.35rem 0.85rem; border-radius: 100px; background: var(--bg-tertiary); border: 1px solid var(--border-subtle); color: var(--accent-color); }
+      .cs-title { font-size: 3rem; font-weight: 700; line-height: 1.15; margin-bottom: 1.5rem; letter-spacing: -0.03em; }
+      .cs-subtitle { font-size: 1.2rem; color: var(--text-secondary); max-width: 640px; }
+      .cs-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 4rem 0; }
+      .cs-stat { padding: 2rem; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 16px; text-align: center; }
+      .cs-stat-val { font-size: 2.5rem; font-weight: 700; color: var(--accent-color); letter-spacing: -0.04em; margin-bottom: 0.5rem; }
+      .cs-stat-label { font-size: 0.875rem; color: var(--text-secondary); font-weight: 500; }
+      .cs-body { padding: 5rem 0; }
+      .cs-grid { display: grid; grid-template-columns: 1fr 320px; gap: 5rem; align-items: start; }
+      .cs-content h2 { font-size: 1.625rem; margin: 3rem 0 1.25rem; color: var(--text-primary); letter-spacing: -0.02em; }
+      .cs-content h2:first-child { margin-top: 0; }
+      .cs-content p { color: var(--text-secondary); font-size: 1.0625rem; line-height: 1.75; margin-bottom: 1.25rem; }
+      .cs-content ul { list-style: none; padding: 0; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
+      .cs-content ul li { color: var(--text-secondary); font-size: 1.0625rem; padding-left: 1.5rem; position: relative; line-height: 1.7; }
+      .cs-content ul li::before { content: ""; position: absolute; left: 0; top: 0.6em; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-color); }
+      .cs-sidebar { position: sticky; top: 100px; display: flex; flex-direction: column; gap: 1.5rem; }
+      .cs-sidebar-card { padding: 1.75rem; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 16px; }
+      .cs-sidebar-card h4 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-color); margin-bottom: 1.25rem; font-weight: 700; }
+      .cs-sidebar-card p { font-size: 0.9375rem; color: var(--text-secondary); margin-bottom: 0.5rem; line-height: 1.6; }
+      .cs-sidebar-card p strong { color: var(--text-primary); font-weight: 600; }
+      .cs-outcome-block { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-left: 3px solid var(--accent-color); border-radius: 0 12px 12px 0; padding: 1.5rem 2rem; margin: 2rem 0; }
+      .cs-outcome-block p { margin: 0; color: var(--text-primary); font-size: 1.0625rem; font-weight: 500; font-style: italic; }
+      .cs-pipeline { display: flex; flex-direction: column; gap: 0; margin: 2rem 0; }
+      .cs-pipeline-step { display: flex; gap: 1.5rem; align-items: flex-start; }
+      .step-line-wrap { display: flex; flex-direction: column; align-items: center; }
+      .step-dot { width: 36px; height: 36px; border-radius: 50%; background: var(--bg-tertiary); border: 2px solid var(--accent-color); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: var(--accent-color); flex-shrink: 0; }
+      .step-line { width: 2px; flex: 1; background: var(--border-subtle); margin: 4px 0; min-height: 24px; }
+      .step-content { padding-bottom: 2rem; }
+      .step-content h5 { font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.4rem; }
+      .step-content p { font-size: 0.9375rem; color: var(--text-secondary); margin: 0; line-height: 1.6; }
+      .cs-tags-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+      .cs-tags-row span { font-size: 0.8125rem; padding: 0.35rem 0.75rem; background: var(--bg-primary); color: var(--text-primary); border-radius: 6px; border: 1px solid var(--border-subtle); font-weight: 500; }
+      .cs-next { padding: 5rem 0; border-top: 1px solid var(--border-subtle); text-align: center; }
+      .cs-next p { color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.0625rem; }
+      @media (max-width: 900px) { .cs-grid { grid-template-columns: 1fr; gap: 3rem; } .cs-sidebar { position: static; } .cs-stats { grid-template-columns: 1fr; } .cs-title { font-size: 2.25rem; } }
+    </style>
+  </head>
+  <body>
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <header class="navbar">
+      <div class="container nav-container">
+        <a href="./index.html" class="nav-brand">Mithun<span>.</span></a>
+        <div class="nav-links" id="navLinks">
+          <a href="./index.html#about">About</a><a href="./index.html#expertise">Expertise</a><a href="./index.html#projects">Work</a><a href="./index.html#experience">Experience</a>
+          <a href="/Mithun_Resume.pdf" download class="btn btn-secondary nav-cta" style="padding: 0.5rem 1rem; border: 1px solid var(--border-subtle); margin-left: 1rem;">Resume PDF Download</a>
+        </div>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        </button>
+        <div class="mobile-menu-btn" id="mobileBtn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></div>
+      </div>
+    </header>
+
+    <main>
+      <section class="cs-hero">
+        <div class="container">
+          <a href="./index.html#projects" class="cs-back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>Back to all projects</a>
+          <div class="cs-meta"><span class="cs-meta-tag">Analytics</span><span class="cs-meta-tag">Power BI</span><span class="cs-meta-tag">DAX</span></div>
+          <h1 class="cs-title">Interactive E-commerce<br>Funnel Analyzer</h1>
+          <p class="cs-subtitle">How I designed a Power BI dashboard with custom DAX measures to visualise the full buying journey and pinpoint the exact pages where users were abandoning.</p>
+          <div class="cs-stats">
+            <div class="cs-stat"><div class="cs-stat-val">3</div><div class="cs-stat-label">Critical drop-off points identified</div></div>
+            <div class="cs-stat"><div class="cs-stat-val">68%</div><div class="cs-stat-label">Cart abandonment rate exposed</div></div>
+            <div class="cs-stat"><div class="cs-stat-val">5</div><div class="cs-stat-label">Funnel stages visualised end-to-end</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cs-body">
+        <div class="container cs-grid">
+          <div class="cs-content">
+            <h2>The Problem</h2>
+            <p>The marketing team for an e-commerce client knew their overall conversion rate but had no visibility into where in the buying journey users were dropping off. Google Analytics was in place but the non-technical team couldn't extract the stage-by-stage funnel breakdown they needed to make informed decisions about UI changes and campaign spend.</p>
+            <p>Every month, the team was making page redesign decisions based on gut feel rather than data — spending budget on optimising pages that weren't actually the problem while the real bottlenecks remained untouched.</p>
+            <div class="cs-outcome-block">
+              <p>"We knew we were losing people somewhere between the product page and checkout. We just didn't know exactly where — or how many."</p>
+            </div>
+
+            <h2>Data Preparation</h2>
+            <p>The raw data came from the platform's event log — a table of user session events with timestamps, page identifiers, and session IDs. Key preparation steps:</p>
+            <ul>
+              <li>Defined the 5-stage funnel: Landing → Product View → Add to Cart → Checkout Start → Purchase</li>
+              <li>Wrote SQL to sessionise events and classify each session by the furthest stage reached</li>
+              <li>Handled multi-visit journeys — users who added to cart in one session and purchased in another counted as a single conversion path</li>
+              <li>Filtered bot traffic using session duration and click velocity thresholds</li>
+            </ul>
+
+            <h2>Dashboard Design</h2>
+            <div class="cs-pipeline">
+              <div class="cs-pipeline-step">
+                <div class="step-line-wrap"><div class="step-dot">1</div><div class="step-line"></div></div>
+                <div class="step-content">
+                  <h5>Funnel Visualisation</h5>
+                  <p>Built a custom funnel chart showing absolute user counts and step-by-step drop-off rates. DAX measures calculated both the absolute drop (users lost at each stage) and the relative drop (percentage of previous-stage users who didn't continue).</p>
+                </div>
+              </div>
+              <div class="cs-pipeline-step">
+                <div class="step-line-wrap"><div class="step-dot">2</div><div class="step-line"></div></div>
+                <div class="step-content">
+                  <h5>Segmentation Slicers</h5>
+                  <p>Added slicers for device type (mobile/desktop/tablet), traffic source (organic, paid, direct), and product category. This let the marketing team compare funnel performance by channel — revealing that mobile checkout had a 22% higher abandonment rate than desktop.</p>
+                </div>
+              </div>
+              <div class="cs-pipeline-step">
+                <div class="step-line-wrap"><div class="step-dot">3</div><div class="step-line"></div></div>
+                <div class="step-content">
+                  <h5>Time Intelligence</h5>
+                  <p>DAX time intelligence functions powered week-over-week and month-over-month comparison panels so the team could track whether funnel improvements were actually moving the needle after UI changes shipped.</p>
+                </div>
+              </div>
+              <div class="cs-pipeline-step">
+                <div class="step-line-wrap"><div class="step-dot">4</div></div>
+                <div class="step-content">
+                  <h5>Bottleneck Highlight Cards</h5>
+                  <p>Conditional formatting automatically flagged the stage with the worst drop-off in red, making the biggest problem immediately visible without requiring the viewer to interpret the numbers themselves.</p>
+                </div>
+              </div>
+            </div>
+
+            <h2>Key Findings</h2>
+            <ul>
+              <li><strong style="color: var(--text-primary);">Checkout start was the biggest drop-off</strong> — 68% of users who added to cart never initiated checkout. The form required account creation before purchase, which the data strongly implicated as the barrier.</li>
+              <li><strong style="color: var(--text-primary);">Mobile checkout was broken</strong> — 22% worse abandonment on mobile than desktop, traced to an address form that didn't support autofill on iOS.</li>
+              <li><strong style="color: var(--text-primary);">Paid traffic had a higher bounce rate at product pages</strong> — suggesting a landing page and ad creative mismatch rather than a product or pricing issue.</li>
+            </ul>
+
+            <h2>Results</h2>
+            <ul>
+              <li>3 critical drop-off points identified and ranked by impact</li>
+              <li>Marketing team had a data-backed case to request guest checkout implementation (highest-impact fix)</li>
+              <li>Dashboard became the weekly review artefact for growth and product teams</li>
+              <li>Mobile autofill fix shipped within 2 weeks of the dashboard flagging the issue</li>
+            </ul>
+
+            <h2>What I'd Do Differently</h2>
+            <p>I'd push to instrument the funnel at the component level, not just the page level — knowing that users dropped off on the checkout page is useful, but knowing they dropped off specifically at the payment form would be more actionable. I'd also set up automatic refresh so the dashboard always showed live data rather than requiring a manual export trigger.</p>
+          </div>
+
+          <aside class="cs-sidebar">
+            <div class="cs-sidebar-card">
+              <h4>Project Details</h4>
+              <p><strong>Company</strong><br>Academic / Personal</p>
+              <p style="margin-top:1rem"><strong>Role</strong><br>Data Analyst</p>
+              <p style="margin-top:1rem"><strong>Timeline</strong><br>~3 weeks</p>
+              <p style="margin-top:1rem"><strong>Scope</strong><br>Data prep, DAX modelling, dashboard design, stakeholder presentation</p>
+            </div>
+            <div class="cs-sidebar-card">
+              <h4>Tech Stack</h4>
+              <div class="cs-tags-row"><span>Power BI</span><span>DAX</span><span>SQL</span><span>Excel</span></div>
+            </div>
+            <div class="cs-sidebar-card">
+              <h4>Key Skills</h4>
+              <div class="cs-tags-row"><span>Funnel Analysis</span><span>DAX Measures</span><span>BI Design</span><span>User Behaviour Analytics</span><span>Segmentation</span></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- Case Study Navigation -->
+      <section style="padding: 3rem 0; border-top: 1px solid var(--border-subtle);">
+        <div class="container">
+          <div class="cs-nav">
+            <a href="./case-study-4.html" class="cs-nav-link prev">
+              <svg class="cs-nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              <div class="cs-nav-text"><h4>Previous</h4><p>Cloud-Native E-commerce</p></div>
+            </a>
+            <a href="./case-study-6.html" class="cs-nav-link next">
+              <div class="cs-nav-text"><h4>Next Case Study</h4><p>Sports Analytics Model</p></div>
+              <svg class="cs-nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="cs-next">
+        <div class="container">
+          <div class="section-badge" style="margin: 0 auto 1.5rem;">More Work</div>
+          <h2 class="section-title" style="margin-bottom: 1rem;">Explore other projects</h2>
+          <p>See the full range — from ETL pipelines to ML decision engines.</p>
+          <a href="./index.html#projects" class="btn btn-primary btn-lg">View All Projects</a>
+        </div>
+      </section>
+    </main>
+    <button id="backToTop" class="back-to-top"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"></polyline></svg></button>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const navbar = document.querySelector('.navbar'), themeToggle = document.getElementById('themeToggle'), backToTopBtn = document.getElementById('backToTop'), progressBar = document.getElementById('scrollProgress');
+        const saved = localStorage.getItem('theme') || 'dark'; document.documentElement.setAttribute('data-theme', saved);
+        themeToggle.addEventListener('click', () => { const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', next); localStorage.setItem('theme', next); });
+        window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.scrollY > 50); backToTopBtn?.classList.toggle('visible', window.scrollY > 500); if (progressBar) { const d = document.documentElement.scrollHeight - window.innerHeight; progressBar.style.width = (d > 0 ? (window.scrollY / d) * 100 : 0) + '%'; } });
+        backToTopBtn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        const obs = new IntersectionObserver((e, o) => { e.forEach(en => { if (en.isIntersecting) { en.target.classList.add('active'); o.unobserve(en.target); } }); }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+      });
+    </script>
+  </body>
+</html>

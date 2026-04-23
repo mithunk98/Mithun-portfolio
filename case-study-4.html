@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Case Study: Cloud-Native E-commerce Decision Engine | Mithun Kumar</title>
+    <meta name="description" content="How I centralised retail data on AWS S3 and built a hybrid Random Forest pipeline to automate strategic business actions.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <style>
+      .cs-hero { padding-top: 140px; padding-bottom: 5rem; border-bottom: 1px solid var(--border-subtle); }
+      .cs-back { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 2.5rem; transition: var(--transition); }
+      .cs-back:hover { color: var(--accent-color); transform: translateX(-4px); }
+      .cs-meta { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
+      .cs-meta-tag { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 0.35rem 0.85rem; border-radius: 100px; background: var(--bg-tertiary); border: 1px solid var(--border-subtle); color: var(--accent-color); }
+      .cs-title { font-size: 3rem; font-weight: 700; line-height: 1.15; margin-bottom: 1.5rem; letter-spacing: -0.03em; }
+      .cs-subtitle { font-size: 1.2rem; color: var(--text-secondary); max-width: 640px; }
+      .cs-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 4rem 0; }
+      .cs-stat { padding: 2rem; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 16px; text-align: center; }
+      .cs-stat-val { font-size: 2.5rem; font-weight: 700; color: var(--accent-color); letter-spacing: -0.04em; margin-bottom: 0.5rem; }
+      .cs-stat-label { font-size: 0.875rem; color: var(--text-secondary); font-weight: 500; }
+      .cs-body { padding: 5rem 0; }
+      .cs-grid { display: grid; grid-template-columns: 1fr 320px; gap: 5rem; align-items: start; }
+      .cs-content h2 { font-size: 1.625rem; margin: 3rem 0 1.25rem; color: var(--text-primary); letter-spacing: -0.02em; }
+      .cs-content h2:first-child { margin-top: 0; }
+      .cs-content p { color: var(--text-secondary); font-size: 1.0625rem; line-height: 1.75; margin-bottom: 1.25rem; }
+      .cs-content ul { list-style: none; padding: 0; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
+      .cs-content ul li { color: var(--text-secondary); font-size: 1.0625rem; padding-left: 1.5rem; position: relative; line-height: 1.7; }
+      .cs-content ul li::before { content: ""; position: absolute; left: 0; top: 0.6em; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-color); }
+      .cs-sidebar { position: sticky; top: 100px; display: flex; flex-direction: column; gap: 1.5rem; }
+      .cs-sidebar-card { padding: 1.75rem; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 16px; }
+      .cs-sidebar-card h4 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-color); margin-bottom: 1.25rem; font-weight: 700; }
+      .cs-sidebar-card p { font-size: 0.9375rem; color: var(--text-secondary); margin-bottom: 0.5rem; line-height: 1.6; }
+      .cs-sidebar-card p strong { color: var(--text-primary); font-weight: 600; }
+      .cs-outcome-block { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-left: 3px solid var(--accent-color); border-radius: 0 12px 12px 0; padding: 1.5rem 2rem; margin: 2rem 0; }
+      .cs-outcome-block p { margin: 0; color: var(--text-primary); font-size: 1.0625rem; font-weight: 500; font-style: italic; }
+      .cs-pipeline { display: flex; flex-direction: column; gap: 0; margin: 2rem 0; }
+      .cs-pipeline-step { display: flex; gap: 1.5rem; align-items: flex-start; }
+      .step-line-wrap { display: flex; flex-direction: column; align-items: center; }
+      .step-dot { width: 36px; height: 36px; border-radius: 50%; background: var(--bg-tertiary); border: 2px solid var(--accent-color); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: var(--accent-color); flex-shrink: 0; }
+      .step-line { width: 2px; flex: 1; background: var(--border-subtle); margin: 4px 0; min-height: 24px; }
+      .step-content { padding-bottom: 2rem; }
+      .step-content h5 { font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.4rem; }
+      .step-content p { font-size: 0.9375rem; color: var(--text-secondary); margin: 0; line-height: 1.6; }
+      .cs-tags-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+      .cs-tags-row span { font-size: 0.8125rem; padding: 0.35rem 0.75rem; background: var(--bg-primary); color: var(--text-primary); border-radius: 6px; border: 1px solid var(--border-subtle); font-weight: 500; }
+      .cs-next { padding: 5rem 0; border-top: 1px solid var(--border-subtle); text-align: center; }
+      .cs-next p { color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.0625rem; }
+      @media (max-width: 900px) { .cs-grid { grid-template-columns: 1fr; gap: 3rem; } .cs-sidebar { position: static; } .cs-stats { grid-template-columns: 1fr; } .cs-title { font-size: 2.25rem; } }
+    </style>
+  </head>
+  <body>
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <header class="navbar">
+      <div class="container nav-container">
+        <a href="./index.html" class="nav-brand">Mithun<span>.</span></a>
+        <div class="nav-links" id="navLinks">
+          <a href="./index.html#about">About</a><a href="./index.html#expertise">Expertise</a><a href="./index.html#projects">Work</a><a href="./index.html#experience">Experience</a>
+          <a href="/Mithun_Resume.pdf" download class="btn btn-secondary nav-cta" style="padding: 0.5rem 1rem; border: 1px solid var(--border-subtle); margin-left: 1rem;">Resume PDF Download</a>
+        </div>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        </button>
+        <div class="mobile-menu-btn" id="mobileBtn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></div>
+      </div>
+    </header>
+
+    <main>
+      <section class="cs-hero">
+        <div class="container">
+          <a href="./index.html#projects" class="cs-back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>Back to all projects</a>
+          <div class="cs-meta"><span class="cs-meta-tag">AWS S3</span><span class="cs-meta-tag">Random Forest</span><span class="cs-meta-tag">NLP</span><span class="cs-meta-tag">Boto3</span></div>
+          <h1 class="cs-title">Cloud-Native E-commerce<br>Decision Engine</h1>
+          <p class="cs-subtitle">How I eliminated retail data silos by centralising data on AWS S3 and building a hybrid NLP + numerical Random Forest model to automate strategic product decisions.</p>
+          <div class="cs-stats">
+            <div class="cs-stat"><div class="cs-stat-val">25%</div><div class="cs-stat-label">Improvement in predictive accuracy</div></div>
+            <div class="cs-stat"><div class="cs-stat-val">3</div><div class="cs-stat-label">Data silos consolidated</div></div>
+            <div class="cs-stat"><div class="cs-stat-val">100%</div><div class="cs-stat-label">Automated decision triggers</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cs-body">
+        <div class="container cs-grid">
+          <div class="cs-content">
+            <h2>The Problem</h2>
+            <p>A retail client's data was fragmented across three separate systems: a product catalogue database, a customer reviews platform (unstructured text), and a sales transaction system. Each team accessed only their own silo, making cross-signal decisions — like adjusting pricing based on review sentiment combined with sales velocity — essentially impossible without manual extraction and ad-hoc analysis.</p>
+            <p>The business goal was to automate pricing and promotional decisions based on predicted product ratings, removing the manual review cycle that was slowing the merchandising team by several days each week.</p>
+            <div class="cs-outcome-block">
+              <p>"We had all the data we needed. It was just in three different places and nobody had connected it."</p>
+            </div>
+
+            <h2>Data Architecture</h2>
+            <p>The first phase was building a centralised data lake on AWS S3 using Boto3 to ingest from all three source systems:</p>
+            <ul>
+              <li>Product catalogue exports (structured CSV) — ingested nightly via scheduled Boto3 upload script</li>
+              <li>Customer reviews (JSON from platform API) — streamed into S3 with metadata tagging by product ID</li>
+              <li>Sales transactions (PostgreSQL dump) — exported and partitioned by week into S3 Parquet files</li>
+            </ul>
+            <p>A unified product ID key linked records across all three sources, enabling the first ever cross-silo join in the business's history.</p>
+
+            <h2>Model Pipeline</h2>
+            <div class="cs-pipeline">
+              <div class="cs-pipeline-step">
+                <div class="step-line-wrap"><div class="step-dot">1</div><div class="step-line"></div></div>
+                <div class="step-content">
+                  <h5>NLP Feature Engineering</h5>
+                  <p>Applied TF-IDF vectorisation on customer review text to extract sentiment signals. Engineered features including review length, keyword frequency (quality, defect, recommend), and average star rating per product.</p>
+                </div>
+              </div>
+              <div class="cs-pipeline-step">
+                <div class="step-line-wrap"><div class="step-dot">2</div><div class="step-line"></div></div>
+                <div class="step-content">
+                  <h5>Numerical Feature Engineering</h5>
+                  <p>Created structured features from sales and catalogue data: sales velocity (units/week), price elasticity index, return rate, stock-out frequency, and category margin contribution.</p>
+                </div>
+              </div>
+              <div class="cs-pipeline-step">
+                <div class="step-line-wrap"><div class="step-dot">3</div><div class="step-line"></div></div>
+                <div class="step-content">
+                  <h5>Random Forest Classifier</h5>
+                  <p>Combined NLP and numerical features into a single feature matrix. Trained a Random Forest classifier to predict product rating tier (High / Medium / At-Risk). Tuned via 5-fold cross-validation; selected max_depth and n_estimators based on F1 score.</p>
+                </div>
+              </div>
+              <div class="cs-pipeline-step">
+                <div class="step-line-wrap"><div class="step-dot">4</div></div>
+                <div class="step-content">
+                  <h5>Decision Trigger Layer</h5>
+                  <p>Model predictions fed into a rule engine: At-Risk products above a sales volume threshold trigger an automated promotional flag; High-rated products with low visibility trigger a merchandising boost recommendation.</p>
+                </div>
+              </div>
+            </div>
+
+            <h2>Key Challenges</h2>
+            <ul>
+              <li><strong style="color: var(--text-primary);">Class imbalance</strong> — only 12% of products fell into the At-Risk tier. Used SMOTE oversampling during training to prevent the model from ignoring the minority class.</li>
+              <li><strong style="color: var(--text-primary);">Review sparsity</strong> — 30% of products had fewer than 5 reviews, making NLP features unreliable. Imputed sparse NLP features with category-level averages rather than dropping products entirely.</li>
+              <li><strong style="color: var(--text-primary);">Feature leakage</strong> — initial model was inadvertently using the current star rating as an input. Caught during validation; rebuilt feature set to use only pre-rating signals.</li>
+            </ul>
+
+            <h2>Results</h2>
+            <ul>
+              <li>25% improvement in predictive accuracy vs. the baseline (sales-only model)</li>
+              <li>Three data silos consolidated into a single S3-based data lake</li>
+              <li>Decision trigger layer automated merchandising actions that previously required manual analyst review</li>
+              <li>Merchandising team's weekly review cycle cut from 3 days to same-day</li>
+            </ul>
+
+            <h2>What I'd Do Differently</h2>
+            <p>I'd implement a proper MLflow experiment tracking setup from the start — managing model versions in notebooks became unwieldy after the third iteration. I'd also add a data quality layer on the S3 ingestion step to catch upstream schema changes before they silently corrupt the feature pipeline.</p>
+          </div>
+
+          <aside class="cs-sidebar">
+            <div class="cs-sidebar-card">
+              <h4>Project Details</h4>
+              <p><strong>Company</strong><br>Academic / Personal</p>
+              <p style="margin-top:1rem"><strong>Role</strong><br>Data Scientist / Engineer</p>
+              <p style="margin-top:1rem"><strong>Timeline</strong><br>~6 weeks</p>
+              <p style="margin-top:1rem"><strong>Scope</strong><br>Data lake architecture, feature engineering, ML model, decision automation</p>
+            </div>
+            <div class="cs-sidebar-card">
+              <h4>Tech Stack</h4>
+              <div class="cs-tags-row"><span>AWS S3</span><span>Boto3</span><span>Python</span><span>scikit-learn</span><span>NLTK</span><span>Pandas</span><span>PostgreSQL</span></div>
+            </div>
+            <div class="cs-sidebar-card">
+              <h4>Key Skills</h4>
+              <div class="cs-tags-row"><span>Cloud Architecture</span><span>NLP</span><span>Feature Engineering</span><span>Random Forest</span><span>Data Lake Design</span></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- Case Study Navigation -->
+      <section style="padding: 3rem 0; border-top: 1px solid var(--border-subtle);">
+        <div class="container">
+          <div class="cs-nav">
+            <a href="./case-study-3.html" class="cs-nav-link prev">
+              <svg class="cs-nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              <div class="cs-nav-text"><h4>Previous</h4><p>Financial Data Processing</p></div>
+            </a>
+            <a href="./case-study-5.html" class="cs-nav-link next">
+              <div class="cs-nav-text"><h4>Next Case Study</h4><p>E-commerce Funnel Analyzer</p></div>
+              <svg class="cs-nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="cs-next">
+        <div class="container">
+          <div class="section-badge" style="margin: 0 auto 1.5rem;">More Work</div>
+          <h2 class="section-title" style="margin-bottom: 1rem;">Explore other projects</h2>
+          <p>See the full range — from BI dashboards to big data processing pipelines.</p>
+          <a href="./index.html#projects" class="btn btn-primary btn-lg">View All Projects</a>
+        </div>
+      </section>
+    </main>
+    <button id="backToTop" class="back-to-top"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"></polyline></svg></button>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const navbar = document.querySelector('.navbar'), themeToggle = document.getElementById('themeToggle'), backToTopBtn = document.getElementById('backToTop'), progressBar = document.getElementById('scrollProgress');
+        const saved = localStorage.getItem('theme') || 'dark'; document.documentElement.setAttribute('data-theme', saved);
+        themeToggle.addEventListener('click', () => { const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', next); localStorage.setItem('theme', next); });
+        window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.scrollY > 50); backToTopBtn?.classList.toggle('visible', window.scrollY > 500); if (progressBar) { const d = document.documentElement.scrollHeight - window.innerHeight; progressBar.style.width = (d > 0 ? (window.scrollY / d) * 100 : 0) + '%'; } });
+        backToTopBtn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        const obs = new IntersectionObserver((e, o) => { e.forEach(en => { if (en.isIntersecting) { en.target.classList.add('active'); o.unobserve(en.target); } }); }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+      });
+    </script>
+  </body>
+</html>
