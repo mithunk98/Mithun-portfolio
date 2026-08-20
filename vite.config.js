@@ -13,6 +13,8 @@ export default defineConfig({
         cs4: resolve(__dirname, 'case-study-4.html'),
         cs5: resolve(__dirname, 'case-study-5.html'),
         cs6: resolve(__dirname, 'case-study-6.html'),
+        cs7: resolve(__dirname, 'case-study-7.html'),
+        cs8: resolve(__dirname, 'case-study-8.html'),
       },
     },
   },

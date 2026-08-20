@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Case Study: Enterprise BI Dashboard Suite | Mithun Kumar</title>
-    <meta name="description" content="How I built an interactive Tableau suite that centralised executive visibility and accelerated weekly decision cycles.">
+    <title>Case Study: Lumen — LLM-Based Credit Underwriting Agent | Mithun Kumar</title>
+    <meta name="description" content="Leading development of an LLM-based underwriting agent for EV financing, and building the audit-grade evaluation framework that decides whether it's trustworthy enough to ship.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -15,6 +15,8 @@
       .cs-back:hover { color: var(--accent-color); transform: translateX(-4px); }
       .cs-meta { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
       .cs-meta-tag { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 0.35rem 0.85rem; border-radius: 100px; background: var(--bg-tertiary); border: 1px solid var(--border-subtle); color: var(--accent-color); }
+      .cs-status-badge { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; font-weight: 600; padding: 0.5rem 1rem; border-radius: 100px; background: rgba(250, 204, 21, 0.1); border: 1px solid rgba(250, 204, 21, 0.35); color: #facc15; margin-bottom: 1.5rem; }
+      .cs-status-dot { width: 8px; height: 8px; border-radius: 50%; background: #facc15; }
       .cs-title { font-size: 3rem; font-weight: 700; line-height: 1.15; margin-bottom: 1.5rem; letter-spacing: -0.03em; }
       .cs-subtitle { font-size: 1.2rem; color: var(--text-secondary); max-width: 640px; }
       .cs-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 4rem 0; }
@@ -38,7 +40,7 @@
       .cs-outcome-block p { margin: 0; color: var(--text-primary); font-size: 1.0625rem; font-weight: 500; font-style: italic; }
       .cs-pipeline { display: flex; flex-direction: column; gap: 0; margin: 2rem 0; }
       .cs-pipeline-step { display: flex; gap: 1.5rem; align-items: flex-start; }
-      .step-line-wrap { display: flex; flex-direction: column; align-items: center; }
+      .cs-pipeline-step:not(:last-child) .step-line-wrap { display: flex; flex-direction: column; align-items: center; }
       .step-dot { width: 36px; height: 36px; border-radius: 50%; background: var(--bg-tertiary); border: 2px solid var(--accent-color); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: var(--accent-color); flex-shrink: 0; }
       .step-line { width: 2px; flex: 1; background: var(--border-subtle); margin: 4px 0; min-height: 24px; }
       .step-content { padding-bottom: 2rem; }
@@ -57,7 +59,7 @@
     </style>
   </head>
   <body>
-    <div class="scroll-progress" id="scrollProgress"></div>
+    <!-- Navigation -->
     <header class="navbar">
       <div class="container nav-container">
         <a href="./index.html" class="nav-brand">Mithun<span>.</span></a>
@@ -73,12 +75,13 @@
           <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
         </button>
         <div class="mobile-menu-btn" id="mobileBtn">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         </div>
       </div>
     </header>
 
     <main>
+      <!-- Case Study Hero -->
       <section class="cs-hero">
         <div class="container">
           <a href="./index.html#projects" class="cs-back">
@@ -86,108 +89,120 @@
             Back to all projects
           </a>
           <div class="cs-meta">
-            <span class="cs-meta-tag">Business Intelligence</span>
-            <span class="cs-meta-tag">Tableau</span>
-            <span class="cs-meta-tag">SQL</span>
+            <span class="cs-meta-tag">AI / LLM</span>
+            <span class="cs-meta-tag">Gemini</span>
+            <span class="cs-meta-tag">Model Evaluation</span>
+            <span class="cs-meta-tag">Fintech Underwriting</span>
           </div>
-          <h1 class="cs-title">Enterprise BI<br>Dashboard Suite</h1>
-          <p class="cs-subtitle">How I modelled core business data and built an interactive Tableau suite that gave executives centralised, drill-down visibility into regional sales and operations.</p>
+          <div class="cs-status-badge"><span class="cs-status-dot"></span> In development — calibration &amp; benchmark evaluation, not yet deployed</div>
+          <h1 class="cs-title">Lumen — LLM-Based<br>Credit Underwriting Agent</h1>
+          <p class="cs-subtitle">Leading development of an AI agent that automates approve / reject / refer decisions for EV financing — and building the audit-grade evaluation framework that decides whether it's actually trustworthy enough to ship.</p>
+
           <div class="cs-stats">
-            <div class="cs-stat"><div class="cs-stat-val">15+</div><div class="cs-stat-label">Dashboards delivered</div></div>
-            <div class="cs-stat"><div class="cs-stat-val">40%</div><div class="cs-stat-label">Fewer ad-hoc data requests</div></div>
-            <div class="cs-stat"><div class="cs-stat-val">3×</div><div class="cs-stat-label">Faster weekly reporting cycle</div></div>
+            <div class="cs-stat">
+              <div class="cs-stat-val">&gt;90%</div>
+              <div class="cs-stat-label">Target accuracy on definitive decisions</div>
+            </div>
+            <div class="cs-stat">
+              <div class="cs-stat-val">60%+</div>
+              <div class="cs-stat-label">Target automation coverage</div>
+            </div>
+            <div class="cs-stat">
+              <div class="cs-stat-val">Zero</div>
+              <div class="cs-stat-label">Tolerance for false approvals</div>
+            </div>
           </div>
         </div>
       </section>
 
+      <!-- Case Study Body -->
       <section class="cs-body">
         <div class="container cs-grid">
+
+          <!-- Main content -->
           <div class="cs-content">
+
             <h2>The Problem</h2>
-            <p>Regional sales leads and operations managers at Vidyuttech were each maintaining their own Excel-based reporting trackers. By the time weekly numbers reached the executive layer, they had been manually consolidated across four teams — with no consistent definitions for key metrics like conversion rate, collection efficiency, or operational throughput.</p>
-            <p>The result was a recurring pattern: leadership would receive conflicting figures from different business units in the same meeting, and a significant portion of each review was spent reconciling numbers rather than acting on them.</p>
+            <p>EV loan underwriting at Vidyuttech runs through a manual review process — an analyst reads each applicant's documents, income proofs and risk signals, and makes an approve / reject / refer call. It's accurate, but it doesn't scale, and a good chunk of applications are genuinely straightforward: the decision is obvious once the right data is in front of a reviewer.</p>
+            <p>The instinct is to point an LLM at the case file and let it decide. I pushed back on that framing early. An underwriting agent that's wrong 5% of the time isn't a productivity tool — it's a new source of bad loans, and a false approval is categorically worse than a false rejection. The real problem isn't "can an LLM do this," it's "how would we ever know if it's safe to trust."</p>
+
             <div class="cs-outcome-block">
-              <p>"We'd spend the first 20 minutes of every Monday meeting figuring out which number was right. We needed one version of the truth."</p>
+              <p>"The interesting engineering problem here was never the model. It was building an evaluation process rigorous enough that a good benchmark score actually means something."</p>
             </div>
 
-            <h2>Discovery & Data Modelling</h2>
-            <p>Before touching Tableau, I spent the first week mapping the business logic behind every metric. Key questions I worked through with each stakeholder group:</p>
+            <h2>Why Evaluation Comes Before the Model</h2>
+            <p>Most LLM pilots I've seen fail quietly: the model looks great on a handful of examples the team already knows the answer to, gets a green light, and then underperforms once real, messy cases hit it. I wanted the evaluation itself to be the hard part — designed so a good score is actually earned.</p>
+            <p>That meant treating the benchmark like a controlled experiment, not a demo:</p>
             <ul>
-              <li>What does "conversion" mean to sales vs. operations — are they measuring the same thing?</li>
-              <li>Which PostgreSQL tables are authoritative for each metric?</li>
-              <li>What's the desired granularity — daily, weekly, by region, by agent?</li>
-              <li>What decisions are actually being made from this data each week?</li>
+              <li>The agent never sees the ground-truth decision for a case until after it commits to an answer.</li>
+              <li>Case packets are compiled blind — no field in the packet reveals which way the original human underwriter went.</li>
+              <li>Every model decision is cryptographically hash-frozen the moment it's produced, before comparison to the true label, so there's no possibility of quietly re-running a case that came back wrong.</li>
+              <li>Comparison against ground truth happens on an air-gapped process, verified independently of the agent's own environment.</li>
             </ul>
-            <p>This discovery phase revealed three different definitions of "active customer" across teams. Aligning on a single SQL definition before building any views was the most valuable work I did on this project.</p>
+            <p>The goal was simple: make it structurally impossible for the evaluation to flatter the model, even by accident.</p>
 
-            <h2>Build Approach</h2>
+            <h2>Calibration Discipline</h2>
+            <p>Once the agent's decisions diverge from a human underwriter's, the tempting move is to patch the prompt or policy logic for that one case and move on. I set a harder rule instead: no calibration change to policy behaviour is accepted on the strength of a single case. Every proposed change needs independent corroboration from at least three separate cases before it's adopted.</p>
+            <p>That single rule filters out a lot of noise — a lot of "the model got this one wrong" turns out to be one ambiguous case, not a real pattern, and treating it as a pattern is how you quietly introduce a new failure mode while fixing an old one.</p>
+
+            <h2>Finding the Bugs That Weren't the Model's Fault</h2>
+            <p>Before I could trust any accuracy number, I had to trust the data feeding the model — and it wasn't clean. Direct SQL investigation of the upstream pipeline surfaced several defects that were silently corrupting case inputs:</p>
             <div class="cs-pipeline">
               <div class="cs-pipeline-step">
                 <div class="step-line-wrap"><div class="step-dot">1</div><div class="step-line"></div></div>
                 <div class="step-content">
-                  <h5>Unified Data Model</h5>
-                  <p>Wrote and documented a canonical SQL view layer on top of the raw PostgreSQL tables, enforcing agreed metric definitions. This became the single source of truth for all dashboards.</p>
+                  <h5>Join fan-out</h5>
+                  <p>A one-to-many join was silently duplicating rows, causing fields from unrelated records to bleed into a case packet that should have been single-applicant.</p>
                 </div>
               </div>
               <div class="cs-pipeline-step">
                 <div class="step-line-wrap"><div class="step-dot">2</div><div class="step-line"></div></div>
                 <div class="step-content">
-                  <h5>Dashboard Architecture</h5>
-                  <p>Designed a three-tier layout: an executive summary (top-line KPIs, trend lines), a regional drill-down (filterable by geography and time), and an agent-level detail view for operations leads.</p>
+                  <h5>Deduplication logic errors</h5>
+                  <p>A dedup step was keeping the wrong record in a handful of edge cases, feeding the model stale or superseded values.</p>
                 </div>
               </div>
               <div class="cs-pipeline-step">
-                <div class="step-line-wrap"><div class="step-dot">3</div><div class="step-line"></div></div>
+                <div class="step-line-wrap"><div class="step-dot">3</div></div>
                 <div class="step-content">
-                  <h5>Iterative Review Cycles</h5>
-                  <p>Ran two rounds of stakeholder review sessions — one with operations, one with leadership — before finalising. Feedback after round one led to adding a week-over-week comparison panel that became the most-used view.</p>
-                </div>
-              </div>
-              <div class="cs-pipeline-step">
-                <div class="step-line-wrap"><div class="step-dot">4</div></div>
-                <div class="step-content">
-                  <h5>Training & Handoff</h5>
-                  <p>Conducted a 45-minute walkthrough with each team lead and documented filter logic in a shared reference doc so the dashboards could be self-served without relying on me.</p>
+                  <h5>Independent verification</h5>
+                  <p>I added PMT/FOIR recomputation as an arithmetic sanity check, repeated-run stability testing to catch non-deterministic output, and source-document cross-checks — so fabricated or duplicated data gets caught before it ever reaches a decision.</p>
                 </div>
               </div>
             </div>
+            <p>None of these would have shown up as a model problem. They'd have shown up as an unexplained accuracy ceiling, and the wrong fix for that is tuning the prompt harder.</p>
 
-            <h2>Key Challenges</h2>
-            <ul>
-              <li><strong style="color: var(--text-primary);">Metric alignment</strong> — three different "conversion rate" definitions across teams. Resolution: ran a cross-functional alignment session and got written sign-off on unified definitions before building.</li>
-              <li><strong style="color: var(--text-primary);">Slow query performance</strong> — initial Tableau extracts on raw tables were taking 8–12 minutes. Resolution: rewrote queries as materialised SQL views with appropriate indexes, bringing load time under 45 seconds.</li>
-              <li><strong style="color: var(--text-primary);">Scope creep</strong> — each team wanted additional views added. Resolution: established a change-request process after the initial 15 dashboards shipped, keeping the core suite stable.</li>
-            </ul>
+            <h2>Current Status</h2>
+            <p>Lumen is in calibration and benchmark evaluation now — not deployed, and not making live underwriting decisions. The >90% accuracy and 60%+ coverage figures above are the design targets that would justify shipping it, not results I'm claiming today. The next gate is a blind holdout run under the same leakage-proof conditions described above; only that clears the agent for a limited pilot.</p>
 
-            <h2>Results</h2>
-            <ul>
-              <li>15+ dashboards deployed across sales, collections, and operations teams</li>
-              <li>40% reduction in ad-hoc data requests as teams became self-sufficient</li>
-              <li>Monday review meetings shortened by approximately 30 minutes as metric conflicts eliminated</li>
-              <li>Executive summary dashboard became the primary reporting artefact used in leadership stand-ups</li>
-            </ul>
+            <h2>What I'd Want in Place Before Go-Live</h2>
+            <p>Beyond the accuracy bar, I'd want a monitored shadow period — the agent runs alongside human underwriters without its decisions taking effect, so drift shows up before it's live. And I'd want the false-approval constraint checked continuously in production, not just at the benchmark gate, since a policy or data distribution shift months later is exactly the kind of thing a one-time evaluation can't catch.</p>
 
-            <h2>What I'd Do Differently</h2>
-            <p>I'd formalise the metric alignment process earlier using a data dictionary document rather than relying on meeting notes. It would also have been worth setting up automated Tableau extract refreshes from day one — we did it manually for the first month, which introduced occasional data lag that eroded confidence until we fixed it.</p>
           </div>
 
+          <!-- Sidebar -->
           <aside class="cs-sidebar">
             <div class="cs-sidebar-card">
               <h4>Project Details</h4>
               <p><strong>Company</strong><br>Vidyuttech</p>
-              <p style="margin-top:1rem"><strong>Role</strong><br>Business Analyst</p>
-              <p style="margin-top:1rem"><strong>Timeline</strong><br>~8 weeks (2025)</p>
-              <p style="margin-top:1rem"><strong>Scope</strong><br>End-to-end: data modelling, dashboard build, stakeholder training</p>
+              <p style="margin-top:1rem"><strong>Role</strong><br>Business Analyst — leading development</p>
+              <p style="margin-top:1rem"><strong>Timeline</strong><br>Ongoing (2026)</p>
+              <p style="margin-top:1rem"><strong>Scope</strong><br>Evaluation framework design, calibration methodology, data-quality diagnostics</p>
             </div>
             <div class="cs-sidebar-card">
               <h4>Tech Stack</h4>
-              <div class="cs-tags-row"><span>Tableau</span><span>PostgreSQL</span><span>SQL Views</span><span>Excel</span></div>
+              <div class="cs-tags-row">
+                <span>Gemini</span><span>Python</span><span>SQL</span><span>Cryptographic Hashing</span>
+              </div>
             </div>
             <div class="cs-sidebar-card">
               <h4>Key Skills</h4>
-              <div class="cs-tags-row"><span>Data Modelling</span><span>Stakeholder Management</span><span>Requirements Gathering</span><span>BI Design</span><span>User Training</span></div>
+              <div class="cs-tags-row">
+                <span>LLM Evaluation Design</span><span>Blinded Benchmarking</span><span>Ground-Truth Leakage Prevention</span><span>Data Quality Diagnosis</span><span>Calibration Discipline</span>
+              </div>
             </div>
           </aside>
+
         </div>
       </section>
 
@@ -195,12 +210,12 @@
       <section style="padding: 3rem 0; border-top: 1px solid var(--border-subtle);">
         <div class="container">
           <div class="cs-nav">
-            <a href="./case-study-1.html" class="cs-nav-link prev">
+            <a href="./case-study-6.html" class="cs-nav-link prev">
               <svg class="cs-nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
-              <div class="cs-nav-text"><h4>Previous</h4><p>Operational Reporting Engine</p></div>
+              <div class="cs-nav-text"><h4>Previous</h4><p>Sports Analytics Model</p></div>
             </a>
-            <a href="./case-study-4.html" class="cs-nav-link next">
-              <div class="cs-nav-text"><h4>Next Case Study</h4><p>Cloud-Native E-commerce</p></div>
+            <a href="./case-study-8.html" class="cs-nav-link next">
+              <div class="cs-nav-text"><h4>Next Case Study</h4><p>A/B Test Design</p></div>
               <svg class="cs-nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
             </a>
           </div>
@@ -211,36 +226,61 @@
         <div class="container">
           <div class="section-badge" style="margin: 0 auto 1.5rem;">More Work</div>
           <h2 class="section-title" style="margin-bottom: 1rem;">Explore other projects</h2>
-          <p>See how I've applied similar thinking across automation pipelines, big data processing, and predictive modelling.</p>
+          <p>See how I've applied similar thinking across BI dashboards, cloud pipelines, and experiment design.</p>
           <a href="./index.html#projects" class="btn btn-primary btn-lg">View All Projects</a>
         </div>
       </section>
     </main>
 
     <button id="backToTop" class="back-to-top" aria-label="Back to Top">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"></polyline></svg>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
     </button>
+
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const navbar = document.querySelector('.navbar');
         const themeToggle = document.getElementById('themeToggle');
         const backToTopBtn = document.getElementById('backToTop');
-        const progressBar = document.getElementById('scrollProgress');
-        const saved = localStorage.getItem('theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', saved);
+        const mobileBtn = document.getElementById('mobileBtn');
+        const navLinks = document.getElementById('navLinks');
+
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
         themeToggle.addEventListener('click', () => {
           const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
           document.documentElement.setAttribute('data-theme', next);
           localStorage.setItem('theme', next);
         });
+
         window.addEventListener('scroll', () => {
           navbar.classList.toggle('scrolled', window.scrollY > 50);
           if (backToTopBtn) backToTopBtn.classList.toggle('visible', window.scrollY > 500);
-          if (progressBar) { const d = document.documentElement.scrollHeight - window.innerHeight; progressBar.style.width = (d > 0 ? (window.scrollY / d) * 100 : 0) + '%'; }
         });
+
         backToTopBtn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-        const obs = new IntersectionObserver((e, o) => { e.forEach(en => { if (en.isIntersecting) { en.target.classList.add('active'); o.unobserve(en.target); } }); }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
-        document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+        mobileBtn?.addEventListener('click', () => {
+          const isOpen = navLinks.style.display === 'flex';
+          navLinks.style.display = isOpen ? 'none' : 'flex';
+          if (!isOpen) {
+            navLinks.style.flexDirection = 'column';
+            navLinks.style.position = 'absolute';
+            navLinks.style.top = '100%';
+            navLinks.style.left = '0';
+            navLinks.style.width = '100%';
+            navLinks.style.background = 'var(--bg-primary)';
+            navLinks.style.padding = '2rem 0';
+            navLinks.style.borderBottom = '1px solid var(--border-subtle)';
+          }
+        });
+
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) { entry.target.classList.add('active'); observer.unobserve(entry.target); }
+          });
+        }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
       });
     </script>
   </body>

@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Case Study: A/B Test Design — Collections Early-Bounce Intervention | Mithun Kumar</title>
+    <meta name="description" content="I automated a collections alert that shipped to 100% of accounts with no control group. This is the experiment I designed to find out whether it actually works.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <style>
+      .cs-hero { padding-top: 140px; padding-bottom: 5rem; border-bottom: 1px solid var(--border-subtle); }
+      .cs-back { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 2.5rem; transition: var(--transition); }
+      .cs-back:hover { color: var(--accent-color); transform: translateX(-4px); }
+      .cs-meta { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
+      .cs-meta-tag { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 0.35rem 0.85rem; border-radius: 100px; background: var(--bg-tertiary); border: 1px solid var(--border-subtle); color: var(--accent-color); }
+      .cs-status-badge { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; font-weight: 600; padding: 0.5rem 1rem; border-radius: 100px; background: rgba(250, 204, 21, 0.1); border: 1px solid rgba(250, 204, 21, 0.35); color: #facc15; margin-bottom: 1.5rem; }
+      .cs-status-dot { width: 8px; height: 8px; border-radius: 50%; background: #facc15; }
+      .cs-title { font-size: 3rem; font-weight: 700; line-height: 1.15; margin-bottom: 1.5rem; letter-spacing: -0.03em; }
+      .cs-subtitle { font-size: 1.2rem; color: var(--text-secondary); max-width: 640px; }
+      .cs-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 4rem 0; }
+      .cs-stat { padding: 2rem; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 16px; text-align: center; }
+      .cs-stat-val { font-size: 2.5rem; font-weight: 700; color: var(--accent-color); letter-spacing: -0.04em; margin-bottom: 0.5rem; }
+      .cs-stat-label { font-size: 0.875rem; color: var(--text-secondary); font-weight: 500; }
+      .cs-body { padding: 5rem 0; }
+      .cs-grid { display: grid; grid-template-columns: 1fr 320px; gap: 5rem; align-items: start; }
+      .cs-content h2 { font-size: 1.625rem; margin: 3rem 0 1.25rem; color: var(--text-primary); letter-spacing: -0.02em; }
+      .cs-content h2:first-child { margin-top: 0; }
+      .cs-content p { color: var(--text-secondary); font-size: 1.0625rem; line-height: 1.75; margin-bottom: 1.25rem; }
+      .cs-content ul { list-style: none; padding: 0; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
+      .cs-content ul li { color: var(--text-secondary); font-size: 1.0625rem; padding-left: 1.5rem; position: relative; line-height: 1.7; }
+      .cs-content ul li::before { content: ""; position: absolute; left: 0; top: 0.6em; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-color); }
+      .cs-sidebar { position: sticky; top: 100px; display: flex; flex-direction: column; gap: 1.5rem; }
+      .cs-sidebar-card { padding: 1.75rem; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 16px; }
+      .cs-sidebar-card h4 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-color); margin-bottom: 1.25rem; font-weight: 700; }
+      .cs-sidebar-card p { font-size: 0.9375rem; color: var(--text-secondary); margin-bottom: 0.5rem; line-height: 1.6; }
+      .cs-sidebar-card p strong { color: var(--text-primary); font-weight: 600; }
+      .cs-outcome-block { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-left: 3px solid var(--accent-color); border-radius: 0 12px 12px 0; padding: 1.5rem 2rem; margin: 2rem 0; }
+      .cs-outcome-block p { margin: 0; color: var(--text-primary); font-size: 1.0625rem; font-weight: 500; font-style: italic; }
+      .cs-pipeline { display: flex; flex-direction: column; gap: 0; margin: 2rem 0; }
+      .cs-pipeline-step { display: flex; gap: 1.5rem; align-items: flex-start; }
+      .cs-pipeline-step:not(:last-child) .step-line-wrap { display: flex; flex-direction: column; align-items: center; }
+      .step-dot { width: 36px; height: 36px; border-radius: 50%; background: var(--bg-tertiary); border: 2px solid var(--accent-color); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: var(--accent-color); flex-shrink: 0; }
+      .step-line { width: 2px; flex: 1; background: var(--border-subtle); margin: 4px 0; min-height: 24px; }
+      .step-content { padding-bottom: 2rem; }
+      .step-content h5 { font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.4rem; }
+      .step-content p { font-size: 0.9375rem; color: var(--text-secondary); margin: 0; line-height: 1.6; }
+      .cs-tags-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+      .cs-tags-row span { font-size: 0.8125rem; padding: 0.35rem 0.75rem; background: var(--bg-primary); color: var(--text-primary); border-radius: 6px; border: 1px solid var(--border-subtle); font-weight: 500; }
+      .cs-next { padding: 5rem 0; border-top: 1px solid var(--border-subtle); text-align: center; }
+      .cs-next p { color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.0625rem; }
+      .ps-chart-card { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 1.75rem 1.75rem 1.25rem; margin: 2rem 0; }
+      .ps-chart-title { font-size: 0.9375rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem; }
+      .ps-chart-subtitle { font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 1.25rem; }
+      .ps-bar-label { font-size: 0.75rem; fill: var(--text-secondary); font-family: 'Inter', sans-serif; }
+      .ps-bar-label-hl { fill: var(--accent-color); font-weight: 700; }
+      .ps-bar-value { font-size: 0.75rem; fill: var(--text-primary); font-weight: 600; font-family: 'Inter', sans-serif; }
+      .ps-axis-label { font-size: 0.6875rem; fill: var(--text-secondary); font-family: 'Inter', sans-serif; }
+      .ps-callout { display: flex; align-items: center; gap: 0.75rem; margin-top: 1.5rem; padding: 1rem 1.25rem; background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 10px; }
+      .ps-callout-badge { font-size: 1.125rem; font-weight: 700; color: var(--accent-color); white-space: nowrap; }
+      .ps-callout-text { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5; }
+      @media (max-width: 900px) {
+        .cs-grid { grid-template-columns: 1fr; gap: 3rem; }
+        .cs-sidebar { position: static; }
+        .cs-stats { grid-template-columns: 1fr; }
+        .cs-title { font-size: 2.25rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <header class="navbar">
+      <div class="container nav-container">
+        <a href="./index.html" class="nav-brand">Mithun<span>.</span></a>
+        <div class="nav-links" id="navLinks">
+          <a href="./index.html#about">About</a>
+          <a href="./index.html#expertise">Expertise</a>
+          <a href="./index.html#projects">Work</a>
+          <a href="./index.html#experience">Experience</a>
+          <a href="/Mithun_Resume.pdf" download class="btn btn-secondary nav-cta" style="padding: 0.5rem 1rem; border: 1px solid var(--border-subtle); margin-left: 1rem;">Resume PDF Download</a>
+        </div>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        </button>
+        <div class="mobile-menu-btn" id="mobileBtn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Case Study Hero -->
+      <section class="cs-hero">
+        <div class="container">
+          <a href="./index.html#projects" class="cs-back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            Back to all projects
+          </a>
+          <div class="cs-meta">
+            <span class="cs-meta-tag">Experimentation</span>
+            <span class="cs-meta-tag">Python</span>
+            <span class="cs-meta-tag">statsmodels</span>
+            <span class="cs-meta-tag">scipy</span>
+          </div>
+          <div class="cs-status-badge"><span class="cs-status-dot"></span> Design complete, analysis pipeline validated — pending live run</div>
+          <h1 class="cs-title">A/B Test Design —<br>Does Our Alert Actually Work?</h1>
+          <p class="cs-subtitle">I built an automation that emails dealers when a customer bounces an EMI. It shipped to 100% of accounts from day one — so nobody, including me, could say whether it actually changes repayment behaviour. This is the experiment I designed to find out.</p>
+
+          <div class="cs-stats">
+            <div class="cs-stat">
+              <div class="cs-stat-val">23 → 2.8</div>
+              <div class="cs-stat-label">Months to a conclusive test, before/after redesign</div>
+            </div>
+            <div class="cs-stat">
+              <div class="cs-stat-val">81%</div>
+              <div class="cs-stat-label">Of control accounts exposed to treatment spillover</div>
+            </div>
+            <div class="cs-stat">
+              <div class="cs-stat-val">94</div>
+              <div class="cs-stat-label">Accounts/month in the eligible cohort</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Case Study Body -->
+      <section class="cs-body">
+        <div class="container cs-grid">
+
+          <!-- Main content -->
+          <div class="cs-content">
+
+            <h2>The Problem</h2>
+            <p>Earlier in my automation work, I built a system that emails each dealership partner a list of their customers who just bounced an EMI, CC'ing the area and territory manager who owns that account. It runs on schedule and covers every eligible account — which is exactly the problem. It went to 100% of the population from day one, so there was never a control group, and no way to know what it actually buys us. It costs dealer and field-team attention every week, and nobody could say whether that attention was well spent.</p>
+
+            <div class="cs-outcome-block">
+              <p>"We were either spending that attention well, or spending it for nothing. Either way, we had no way to tell."</p>
+            </div>
+
+            <h2>The Obvious Design Doesn't Work</h2>
+            <p>The natural metric is cure rate — did the customer pay or not. I ran the power analysis before writing a line of the experiment, and it killed the naive design immediately. At a 45% baseline cure rate, detecting the +6pp lift that would justify the intervention's ongoing cost required <strong style="color: var(--text-primary);">2,176 accounts — 23 months</strong> of accrual at this population's volume. A test that long is meaningless: portfolio mix and collections policy drift underneath it long before it finishes.</p>
+            <p>In a realistic 3-month window, the binary design could only detect a +16.6pp swing or larger. Anything smaller reads as "no effect" whether or not it's real — the test would just be measuring its own noise floor.</p>
+
+            <h2>The Fix: Measure Money, Not a Yes/No</h2>
+            <p>A cure flag throws away almost everything a partial payment tells you. Switching the primary metric to a continuous <em>amount-recovered ratio</em> — ₹ collected ÷ ₹ due within 30 days — uses the whole distribution instead of one bit per account. On the identical population, that redesign brought a conclusive test down to <strong style="color: var(--text-primary);">260 accounts, roughly 2.8 months</strong>. Same cohort, same timeline constraint, a test that can actually reach a conclusion.</p>
+
+            <div class="ps-chart-card">
+              <div class="ps-chart-title">Months to a Conclusive Test, by Effect Size — Binary Cure-Rate Metric</div>
+              <div class="ps-chart-subtitle">Real output from this project's power analysis, at the population's actual accrual rate of 94 accounts/month.</div>
+              <svg viewBox="0 0 640 320" style="width:100%; height:auto;" role="img" aria-label="Bar chart: months to a conclusive test by effect size, for the binary cure-rate metric">
+                <line x1="150" y1="10" x2="150" y2="290" stroke="var(--border-subtle)" stroke-width="1"></line>
+                <line x1="275.7" y1="10" x2="275.7" y2="290" stroke="var(--border-subtle)" stroke-width="1"></line>
+                <line x1="401.4" y1="10" x2="401.4" y2="290" stroke="var(--border-subtle)" stroke-width="1"></line>
+                <line x1="527.1" y1="10" x2="527.1" y2="290" stroke="var(--border-subtle)" stroke-width="1"></line>
+
+                <line x1="187.7" y1="10" x2="187.7" y2="290" stroke="var(--accent-color)" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.55"></line>
+                <text x="187.7" y="8" class="ps-axis-label" text-anchor="middle">3-mo window</text>
+
+                <g>
+                  <title>+5pp lift: 33.3 months to a conclusive test</title>
+                  <text x="140" y="31" class="ps-bar-label" text-anchor="end">+5pp</text>
+                  <rect x="150" y="16" width="418.6" height="22" rx="4" fill="var(--border-subtle)"></rect>
+                  <text x="574.6" y="31" class="ps-bar-value">33.3 mo</text>
+                </g>
+                <g>
+                  <title>+6pp lift (the business-case effect): 23.1 months to a conclusive test</title>
+                  <text x="140" y="71" class="ps-bar-label ps-bar-label-hl" text-anchor="end">+6pp</text>
+                  <rect x="150" y="56" width="290.4" height="22" rx="4" fill="var(--accent-color)"></rect>
+                  <text x="446.4" y="71" class="ps-bar-value">23.1 mo</text>
+                </g>
+                <g>
+                  <title>+8pp lift: 13.0 months to a conclusive test</title>
+                  <text x="140" y="111" class="ps-bar-label" text-anchor="end">+8pp</text>
+                  <rect x="150" y="96" width="163.4" height="22" rx="4" fill="var(--border-subtle)"></rect>
+                  <text x="319.4" y="111" class="ps-bar-value">13.0 mo</text>
+                </g>
+                <g>
+                  <title>+10pp lift: 8.3 months to a conclusive test</title>
+                  <text x="140" y="151" class="ps-bar-label" text-anchor="end">+10pp</text>
+                  <rect x="150" y="136" width="104.3" height="22" rx="4" fill="var(--border-subtle)"></rect>
+                  <text x="260.3" y="151" class="ps-bar-value">8.3 mo</text>
+                </g>
+                <g>
+                  <title>+12pp lift: 5.8 months to a conclusive test</title>
+                  <text x="140" y="191" class="ps-bar-label" text-anchor="end">+12pp</text>
+                  <rect x="150" y="176" width="72.9" height="22" rx="4" fill="var(--border-subtle)"></rect>
+                  <text x="228.9" y="191" class="ps-bar-value">5.8 mo</text>
+                </g>
+                <g>
+                  <title>+15pp lift: 3.7 months to a conclusive test</title>
+                  <text x="140" y="231" class="ps-bar-label" text-anchor="end">+15pp</text>
+                  <rect x="150" y="216" width="46.5" height="22" rx="4" fill="var(--border-subtle)"></rect>
+                  <text x="202.5" y="231" class="ps-bar-value">3.7 mo</text>
+                </g>
+                <g>
+                  <title>+20pp lift: 2.0 months to a conclusive test</title>
+                  <text x="140" y="271" class="ps-bar-label" text-anchor="end">+20pp</text>
+                  <rect x="150" y="256" width="25.1" height="22" rx="4" fill="var(--border-subtle)"></rect>
+                  <text x="181.1" y="271" class="ps-bar-value">2.0 mo</text>
+                </g>
+
+                <line x1="150" y1="290" x2="590" y2="290" stroke="var(--border-subtle)" stroke-width="1"></line>
+                <text x="150" y="308" class="ps-axis-label" text-anchor="middle">0</text>
+                <text x="275.7" y="308" class="ps-axis-label" text-anchor="middle">10</text>
+                <text x="401.4" y="308" class="ps-axis-label" text-anchor="middle">20</text>
+                <text x="527.1" y="308" class="ps-axis-label" text-anchor="middle">30 mo</text>
+              </svg>
+              <div class="ps-callout">
+                <div class="ps-callout-badge">2.8 mo</div>
+                <div class="ps-callout-text">The redesign — a continuous recovery-ratio metric instead of a binary cure flag — reaches a conclusive test on the <strong style="color: var(--text-primary);">same population</strong> in under 3 months. That's the highlighted <strong style="color: var(--text-primary);">+6pp</strong> bar collapsing from 23.1 months down to inside the reference line, just by changing what gets measured.</div>
+              </div>
+            </div>
+
+            <h2>Finding the Contamination Problem</h2>
+            <p>The treatment is dealer-level — one alert covers all of a dealer's bouncing customers — but I'd planned to randomise at the customer level. Checking the actual cohort surfaced a real problem: 12 of 24 dealers held accounts in both arms, meaning <strong style="color: var(--text-primary);">81% of control accounts sat with a dealer who was actively being alerted about their other customers</strong>. A dealer told "three of your customers just bounced" may well chase all of theirs — which pushes the measured effect toward zero regardless of the true impact.</p>
+            <p>I considered randomising at the dealer level instead, which would remove the spillover cleanly — but with only 24 dealers, the effective sample collapses and the power problem I'd just solved comes right back. I kept the customer-level draw and pre-registered the result as an <strong style="color: var(--text-primary);">intent-to-treat lower bound</strong>, reporting the contamination rate alongside it, so a null result can never be misread as "the alert does nothing."</p>
+
+            <h2>Design Discipline</h2>
+            <div class="cs-pipeline">
+              <div class="cs-pipeline-step">
+                <div class="step-line-wrap"><div class="step-dot">1</div><div class="step-line"></div></div>
+                <div class="step-content">
+                  <h5>Stratified rerandomisation</h5>
+                  <p>The first draw came back imbalanced on EMI amount (SMD 0.25). Because no outcome data existed yet and the acceptance criterion was fixed in advance, redrawing until covariates cleared |SMD| &lt; 0.10 is legitimate — not p-hacking.</p>
+                </div>
+              </div>
+              <div class="cs-pipeline-step">
+                <div class="step-line-wrap"><div class="step-dot">2</div><div class="step-line"></div></div>
+                <div class="step-content">
+                  <h5>Pre-registered analysis plan</h5>
+                  <p>Primary: Welch t-test with covariate adjustment. Secondary: two-proportion z-test with Wilson intervals. Guardrail: escalation rate, capped at +2pp. Segments: Benjamini-Hochberg corrected, explicitly exploratory.</p>
+                </div>
+              </div>
+              <div class="cs-pipeline-step">
+                <div class="step-line-wrap"><div class="step-dot">3</div></div>
+                <div class="step-content">
+                  <h5>Fixed decision rule</h5>
+                  <p>The metric, sample size, and stopping point were all fixed before any data was seen — no stopping early on a good week, which is the most common way experiments produce results that don't replicate.</p>
+                </div>
+              </div>
+            </div>
+
+            <h2>Current Status</h2>
+            <p>The controlled test hasn't been run against real outcomes yet. I built and validated the full pipeline — cohort construction, anonymisation, power analysis, randomisation, and the pre-registered readout — against simulated outcomes so it's provably correct end to end before it touches production data. On that dry run, the result landed at p = 0.0513 with the confidence interval brushing zero: a useful reminder that the disciplined answer at a near-miss is "keep accruing," not "round up to significant."</p>
+            <p>The design is written up as a one-page decision memo, ready to take to the CRO for sign-off on withholding the alert from a randomised holdout for one quarter.</p>
+
+          </div>
+
+          <!-- Sidebar -->
+          <aside class="cs-sidebar">
+            <a href="https://github.com/mithunk98/ab-test-collections-early-bounce" target="_blank" rel="noopener" class="cs-sidebar-card" style="display: flex; align-items: center; gap: 0.85rem; text-decoration: none; transition: var(--transition);" onmouseover="this.style.borderColor='var(--accent-color)'" onmouseout="this.style.borderColor='var(--border-subtle)'">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="color: var(--text-primary); flex-shrink: 0;"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+              <span><strong style="color: var(--text-primary); display: block; font-size: 0.875rem;">View Source on GitHub</strong><span style="color: var(--text-secondary); font-size: 0.8125rem;">Full pipeline, anonymised</span></span>
+            </a>
+            <div class="cs-sidebar-card">
+              <h4>Project Details</h4>
+              <p><strong>Company</strong><br>Vidyuttech</p>
+              <p style="margin-top:1rem"><strong>Role</strong><br>Business Analyst — solo design</p>
+              <p style="margin-top:1rem"><strong>Timeline</strong><br>2026</p>
+              <p style="margin-top:1rem"><strong>Scope</strong><br>Power analysis, randomisation design, pre-registered analysis pipeline, decision memo</p>
+            </div>
+            <div class="cs-sidebar-card">
+              <h4>Tech Stack</h4>
+              <div class="cs-tags-row">
+                <span>Python</span><span>statsmodels</span><span>scipy</span><span>pandas</span>
+              </div>
+            </div>
+            <div class="cs-sidebar-card">
+              <h4>Key Skills</h4>
+              <div class="cs-tags-row">
+                <span>A/B Test Design</span><span>Power Analysis</span><span>Stratified Randomisation</span><span>Causal Inference</span><span>Pre-Registration</span>
+              </div>
+            </div>
+          </aside>
+
+        </div>
+      </section>
+
+      <!-- Case Study Navigation -->
+      <section style="padding: 3rem 0; border-top: 1px solid var(--border-subtle);">
+        <div class="container">
+          <div class="cs-nav">
+            <a href="./case-study-7.html" class="cs-nav-link prev">
+              <svg class="cs-nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              <div class="cs-nav-text"><h4>Previous</h4><p>Lumen — LLM Underwriting Agent</p></div>
+            </a>
+            <a href="#" class="cs-nav-link disabled next">
+              <div class="cs-nav-text"><h4>Next</h4><p>Back to portfolio</p></div>
+              <svg class="cs-nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="cs-next">
+        <div class="container">
+          <div class="section-badge" style="margin: 0 auto 1.5rem;">More Work</div>
+          <h2 class="section-title" style="margin-bottom: 1rem;">Explore other projects</h2>
+          <p>See how I've applied similar thinking across BI dashboards, cloud pipelines, and AI evaluation design.</p>
+          <a href="./index.html#projects" class="btn btn-primary btn-lg">View All Projects</a>
+        </div>
+      </section>
+    </main>
+
+    <button id="backToTop" class="back-to-top" aria-label="Back to Top">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+    </button>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const navbar = document.querySelector('.navbar');
+        const themeToggle = document.getElementById('themeToggle');
+        const backToTopBtn = document.getElementById('backToTop');
+        const mobileBtn = document.getElementById('mobileBtn');
+        const navLinks = document.getElementById('navLinks');
+
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+          const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', next);
+          localStorage.setItem('theme', next);
+        });
+
+        window.addEventListener('scroll', () => {
+          navbar.classList.toggle('scrolled', window.scrollY > 50);
+          if (backToTopBtn) backToTopBtn.classList.toggle('visible', window.scrollY > 500);
+        });
+
+        backToTopBtn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        mobileBtn?.addEventListener('click', () => {
+          const isOpen = navLinks.style.display === 'flex';
+          navLinks.style.display = isOpen ? 'none' : 'flex';
+          if (!isOpen) {
+            navLinks.style.flexDirection = 'column';
+            navLinks.style.position = 'absolute';
+            navLinks.style.top = '100%';
+            navLinks.style.left = '0';
+            navLinks.style.width = '100%';
+            navLinks.style.background = 'var(--bg-primary)';
+            navLinks.style.padding = '2rem 0';
+            navLinks.style.borderBottom = '1px solid var(--border-subtle)';
+          }
+        });
+
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) { entry.target.classList.add('active'); observer.unobserve(entry.target); }
+          });
+        }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+      });
+    </script>
+  </body>
+</html>

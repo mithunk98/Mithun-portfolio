@@ -81,6 +81,7 @@
             <span class="availability-dot"></span>
             Open to new opportunities
           </div>
+          <p style="color: var(--text-secondary); font-size: 0.9375rem; margin-top: 1rem;">Currently leading <strong style="color: var(--text-primary);">Lumen</strong>, an LLM-based underwriting agent, and pursuing an M.Sc. in Data Science.</p>
           <div class="hero-actions reveal" style="transition-delay: 0.4s">
             <a href="#projects" class="btn btn-primary btn-lg">View Enterprise Projects</a>
             <a href="/Mithun_Resume.pdf" download class="btn btn-secondary btn-lg">
@@ -151,6 +152,15 @@
               <h3 class="expertise-title">Practical Automation</h3>
               <p class="expertise-text">By utilizing Python and SQL to script repetitive reporting tasks, I try to eliminate manual data entry wherever possible. Doing this helps teams get their time back so they can focus on actual analysis.</p>
             </div>
+
+            <!-- Principle 4 -->
+            <div class="expertise-card reveal" style="transition-delay: 0.3s">
+              <div class="expertise-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"></path><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.5 0 2.91.37 4.15 1.02"></path></svg>
+              </div>
+              <h3 class="expertise-title">Trust, But Verify</h3>
+              <p class="expertise-text">A good-looking result isn't the same as a proven one. Whether it's an LLM underwriting agent or a collections intervention that shipped without a control group, I design the evaluation to be at least as rigorous as the thing it's evaluating.</p>
+            </div>
           </div>
         </div>
       </section>
@@ -186,7 +196,6 @@
                 <span><img src="https://cdn.simpleicons.org/tableau/38BDF8" alt="">Tableau</span>
                 <span><img src="https://cdn.simpleicons.org/metabase/509EE3" alt="">Metabase</span>
                 <span><img src="https://cdn.simpleicons.org/microsoftexcel/217346" alt="">Excel</span>
-                <span><img src="https://cdn.simpleicons.org/powerbi/F2C811" alt="">Power BI</span>
               </div>
             </div>
 
@@ -199,7 +208,6 @@
               <div class="skill-tags">
                 <span><img src="https://cdn.simpleicons.org/python/3776AB" alt="">Python</span>
                 <span><img src="https://cdn.simpleicons.org/postgresql/4169E1" alt="">PostgreSQL</span>
-                <span><img src="https://cdn.simpleicons.org/apachehadoop/66CCFF" alt="">Hadoop</span>
                 <span><img src="https://cdn.simpleicons.org/amazonaws/FF9900" alt="">AWS S3</span>
               </div>
             </div>
@@ -217,6 +225,19 @@
               </div>
             </div>
 
+            <div class="expertise-card">
+              <div class="expertise-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4v1a3 3 0 0 1 2 2.83V13a4 4 0 0 1-2 3.46V18a4 4 0 0 1-8 0v-1.54A4 4 0 0 1 6 13v-3.17A3 3 0 0 1 8 7V6a4 4 0 0 1 4-4z"></path><line x1="12" y1="18" x2="12" y2="22"></line><line x1="8" y1="22" x2="16" y2="22"></line></svg>
+              </div>
+              <h3 class="expertise-title">AI & Experimentation</h3>
+              <p class="expertise-text">Designing controlled experiments to validate business interventions, and building audit-grade evaluation frameworks for LLM-based decision systems before they're trusted with real decisions.</p>
+              <div class="skill-tags">
+                <span>A/B Test Design</span>
+                <span>Power Analysis</span>
+                <span>LLM Evaluation</span>
+              </div>
+            </div>
+
           </div>
 
           <!-- Skills Stack Tag Cloud -->
@@ -226,19 +247,31 @@
               <div class="skill-category">
                 <h4>Languages & Query</h4>
                 <div class="skill-chips">
-                  <span>Python</span><span>SQL</span><span>PostgreSQL</span><span>DAX</span><span>Bash</span>
+                  <span>Python</span><span>SQL</span><span>PostgreSQL</span><span>Bash</span>
                 </div>
               </div>
               <div class="skill-category">
                 <h4>BI & Visualisation</h4>
                 <div class="skill-chips">
-                  <span>Tableau</span><span>Power BI</span><span>Metabase</span><span>Advanced Excel</span>
+                  <span>Tableau</span><span>Metabase</span><span>Advanced Excel</span>
                 </div>
               </div>
               <div class="skill-category">
                 <h4>Data & Cloud</h4>
                 <div class="skill-chips">
-                  <span>Hadoop</span><span>Map-Reduce</span><span>AWS S3</span><span>Boto3</span><span>ETL Pipelines</span>
+                  <span>AWS S3</span><span>Boto3</span><span>ETL Pipelines</span>
+                </div>
+              </div>
+              <div class="skill-category">
+                <h4>Experimentation & Statistics</h4>
+                <div class="skill-chips">
+                  <span>A/B Test Design</span><span>Power Analysis</span><span>Stratified Randomisation</span><span>statsmodels / scipy</span>
+                </div>
+              </div>
+              <div class="skill-category">
+                <h4>AI & LLM Systems</h4>
+                <div class="skill-chips">
+                  <span>LLM Decision Agents</span><span>Model Evaluation</span><span>Blinded Benchmarking</span>
                 </div>
               </div>
               <div class="skill-category">
@@ -297,18 +330,6 @@
               <div class="project-overlay"><span class="project-overlay-cta">Read Case Study →</span></div>
             </a>
 
-            <!-- Project 3 -->
-            <a href="./case-study-3.html" class="project-card reveal" style="text-decoration: none;">
-              <div class="project-content">
-                <div class="project-tags"><span>Big Data</span><span>Hadoop</span><span>Map-Reduce</span></div>
-                <h3 class="project-title">Financial Data Processing Optimizer</h3>
-                <p class="project-p"><strong>Context:</strong> Processing high-volume financial datasets via legacy tools took ~4 hours per run.</p>
-                <p class="project-p"><strong>Solution:</strong> Deployed a Map-Reduce architecture on Hadoop to intelligently distribute the processing workloads.</p>
-                <p class="project-highlight">Impact: 81% faster analysis processing (from 4 hours to 45 mins).</p>
-              </div>
-              <div class="project-overlay"><span class="project-overlay-cta">Read Case Study →</span></div>
-            </a>
-
             <!-- Project 4 -->
             <a href="./case-study-4.html" class="project-card reveal" style="text-decoration: none;">
               <div class="project-content">
@@ -321,18 +342,6 @@
               <div class="project-overlay"><span class="project-overlay-cta">Read Case Study →</span></div>
             </a>
 
-            <!-- Project 5 -->
-            <a href="./case-study-5.html" class="project-card reveal" style="text-decoration: none;">
-              <div class="project-content">
-                <div class="project-tags"><span>Analytics</span><span>Power BI</span><span>DAX</span></div>
-                <h3 class="project-title">Interactive E-commerce Funnel Analyzer</h3>
-                <p class="project-p"><strong>Context:</strong> Marketing teams struggled to pinpoint exactly where users were dropping off in the buying journey.</p>
-                <p class="project-p"><strong>Solution:</strong> Designed a Power BI dashboard with DAX measures to visualize the end-to-end conversion funnel.</p>
-                <p class="project-highlight">Impact: Identified key bottleneck pages, enabling targeted UI improvements.</p>
-              </div>
-              <div class="project-overlay"><span class="project-overlay-cta">Read Case Study →</span></div>
-            </a>
-
             <!-- Project 6 -->
             <a href="./case-study-6.html" class="project-card reveal" style="text-decoration: none;">
               <div class="project-content">
@@ -341,6 +350,30 @@
                 <p class="project-p"><strong>Context:</strong> Academic project predicting match outcomes using 4 historical seasons of sports telemetry data.</p>
                 <p class="project-p"><strong>Solution:</strong> Conducted feature engineering and correlation analysis to build a predictive model in SPSS.</p>
                 <p class="project-highlight">Impact: Achieved 78% accuracy in forecasting baseline match outcomes.</p>
+              </div>
+              <div class="project-overlay"><span class="project-overlay-cta">Read Case Study →</span></div>
+            </a>
+
+            <!-- Project 7 -->
+            <a href="./case-study-7.html" class="project-card reveal" style="text-decoration: none;">
+              <div class="project-content">
+                <div class="project-tags"><span>AI / LLM</span><span>Gemini</span><span>Model Evaluation</span></div>
+                <h3 class="project-title">Lumen — LLM-Based Credit Underwriting Agent</h3>
+                <p class="project-p"><strong>Context:</strong> Manual EV loan underwriting doesn't scale, but a wrong automated approval is far worse than a slow one.</p>
+                <p class="project-p"><strong>Solution:</strong> Leading development of an LLM underwriting agent, with an audit-grade blinded evaluation framework that decides whether it's trustworthy enough to ship.</p>
+                <p class="project-highlight">Status: In calibration & benchmark evaluation — targeting &gt;90% accuracy at 60%+ coverage.</p>
+              </div>
+              <div class="project-overlay"><span class="project-overlay-cta">Read Case Study →</span></div>
+            </a>
+
+            <!-- Project 8 -->
+            <a href="./case-study-8.html" class="project-card reveal" style="text-decoration: none;">
+              <div class="project-content">
+                <div class="project-tags"><span>Experimentation</span><span>Python</span><span>statsmodels</span></div>
+                <h3 class="project-title">A/B Test Design — Collections Early-Bounce Intervention</h3>
+                <p class="project-p"><strong>Context:</strong> A collections alert I automated shipped to 100% of accounts with no control group — no way to know if it worked.</p>
+                <p class="project-p"><strong>Solution:</strong> Designed a pre-registered experiment; power analysis cut the time-to-conclusive-test from 23 months to under 3.</p>
+                <p class="project-highlight">Impact: Found the test design was infeasible before running it, and fixed it before spending a rupee of dealer attention.</p>
               </div>
               <div class="project-overlay"><span class="project-overlay-cta">Read Case Study →</span></div>
             </a>
@@ -365,7 +398,7 @@
               </div>
               <div class="exp-content">
                 <h3 class="exp-role">Business Analyst</h3>
-                <p class="exp-desc">Spearheading data operations for the core product. Automated 23+ operational reports using Python/SQL, directly improving data accuracy by 30%. Executed comprehensive location risk-analysis algorithms, lifting customer repayment predictability by 25%. Designed interactive Metabase dashboards that slashed ad-hoc requests by 40%.</p>
+                <p class="exp-desc">Own risk and portfolio analytics for a ₹253 Cr lending book, reporting directly to the CRO. Author the monthly Risk MFR presented to the CEO and CRO, automated 23+ operational reports (50% effort reduction), and currently lead development of Lumen, an LLM-based underwriting agent.</p>
               </div>
             </div>
 
@@ -415,7 +448,7 @@
           <div class="footer-cta" style="margin-bottom: 3rem;">
             <h2 style="margin-bottom: 1rem;">Let's build data-driven solutions.</h2>
             <p style="color: var(--text-secondary); margin-bottom: 1rem;">I'm currently open for new opportunities to drive strategic growth.</p>
-            <p style="margin-bottom: 2rem;"><a href="mailto:mithunk.98.0229@gmail.com" style="color: var(--accent-color); font-weight: 600; text-decoration: none; border-bottom: 2px solid var(--accent-color); transition: var(--transition);" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">mithunk.98.0229@gmail.com</a> — or fill the form below.</p>
+            <p style="margin-bottom: 2rem;"><a href="mailto:mithunk98.0229@gmail.com" style="color: var(--accent-color); font-weight: 600; text-decoration: none; border-bottom: 2px solid var(--accent-color); transition: var(--transition);" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">mithunk98.0229@gmail.com</a> — or fill the form below.</p>
             
             <!-- Contact Form (Web3Forms Integration) -->
             <form action="https://api.web3forms.com/submit" method="POST" class="contact-form">
@@ -438,7 +471,7 @@
           <div class="footer-bottom">
             <div class="footer-logo">Mithun<span>.</span></div>
             <div class="social-icons">
-              <a href="mailto:mithunk.98.0229@gmail.com" class="social-icon" aria-label="Email"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></a>
+              <a href="mailto:mithunk98.0229@gmail.com" class="social-icon" aria-label="Email"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></a>
               <a href="https://github.com/mithunk98" target="_blank" class="social-icon" aria-label="GitHub"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
               <a href="https://linkedin.com/in/mithunk98" target="_blank" class="social-icon" aria-label="LinkedIn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
             </div>
