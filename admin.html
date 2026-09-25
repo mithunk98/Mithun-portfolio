@@ -131,9 +131,21 @@
     </div>
   </div>
 
-  <script>
-    // The Passcode to enter the admin page
-    const PASS = "BA2026"; 
+  <!-- type="module" is required for import.meta.env, which Vite uses to inject
+       VITE_* values. Module scope is not global, so the two functions used by
+       inline onclick handlers are attached to window at the end of this block. -->
+  <script type="module">
+    // NOT a security control. This comparison happens in the browser, so the
+    // expected value is readable by anyone who opens the page source or the
+    // built bundle. It is a convenience lock for local use only, which is why
+    // this page is excluded from the production build in vite.config.js.
+    //
+    // The value comes from .env.local (gitignored) so that no passcode string
+    // is ever committed:  VITE_ADMIN_PASSCODE=whatever
+    const PASS = import.meta.env.VITE_ADMIN_PASSCODE ?? "";
+    if (!PASS) {
+      console.warn("VITE_ADMIN_PASSCODE is not set - see .env.example");
+    }
     
     if(sessionStorage.getItem('admin_auth') === 'true') {
       showDashboard();
@@ -141,7 +153,9 @@
     
     function checkPass() {
       const input = document.getElementById('passcode').value;
-      if (input.toUpperCase() === PASS.toUpperCase()) {
+      // Without a configured passcode, refuse everything - otherwise an empty
+      // input would match the empty default and unlock the page.
+      if (PASS && input.toUpperCase() === PASS.toUpperCase()) {
         sessionStorage.setItem('admin_auth', 'true');
         showDashboard();
       } else {
@@ -221,6 +235,12 @@
     document.getElementById('passcode').addEventListener('keypress', function(e) {
       if (e.key === 'Enter') checkPass();
     });
+
+    // Inline onclick="" handlers resolve against the global scope, which a
+    // module script does not share. Without these two lines the Unlock and
+    // Logout buttons silently do nothing.
+    window.checkPass = checkPass;
+    window.logout = logout;
   </script>
 </body>
 </html>

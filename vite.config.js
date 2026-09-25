@@ -6,7 +6,10 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        admin: resolve(__dirname, 'admin.html'),
+        // admin.html is intentionally NOT built or deployed. It is gated only by
+        // a passcode compared in client-side JavaScript, which anyone can read
+        // from the page source - that is not a security boundary, so the page
+        // must not be published. Run it locally with `npm run dev` instead.
         cs1: resolve(__dirname, 'case-study-1.html'),
         cs2: resolve(__dirname, 'case-study-2.html'),
         cs3: resolve(__dirname, 'case-study-3.html'),
